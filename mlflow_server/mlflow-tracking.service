@@ -1,0 +1,12 @@
+[Unit]
+Description=MLflow Tracking Server
+After=network.target
+[Service]
+Restart=on-failure
+RestartSec=30
+StandardOutput=/home/rainforest/mlflow/mllogs/stdout.log
+StandardError=/home/rainforest/mlflow/mllogs/stderr.log
+User=rainforest
+ExecStart=/usr/bin/sh -c 'exec /home/rainforest/Repositories/research-devops/mlflow_server/mlflow-server.sh'
+[Install]
+WantedBy=multi-user.target
