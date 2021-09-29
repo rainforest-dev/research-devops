@@ -2,4 +2,4 @@
 
 ## Components
 
-* [mlflow_server](mlflow_server/README.rst)
+* [mlflow_server](mlflow_server/README.md)
