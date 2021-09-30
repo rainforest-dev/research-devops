@@ -1,0 +1,3 @@
+[submodule "rainforest-devops"]
+	path = rainforest-devops
+	url = https://github.com/rainforest-tools/rainforest-devops.git
