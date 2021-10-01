@@ -63,7 +63,7 @@ mc ls minio
 ```
 
 - Create Minio with PersistentVolume
-  - About Creation of PV, please refer to [rainforest-devops](../rainforest-devops/volumes/README.md)
+  - About Creation of PV, please refer to [rainforest-devops](https://raw.githubusercontent.com/rainforest-tools/rainforest-devops/29a2c1e3d1843a4cb7f7f2d10a59dfa057e14f2d/volumes/README.md)
     ```bash
     ark install minio --set persistence.enabled=true \
                       --set persistence.existingClaim=[PVC NAME] \
