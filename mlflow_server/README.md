@@ -2,18 +2,22 @@
 
 - [ ] Containerized MLflow Server
 
-
 ## MLflow Setup
+
 ### [Arkade](https://github.com/alexellis/arkade) - The Open Source Kubernetes Marketplace
+
 > [Two year update: Building an Open Source Marketplace for Kubernetes](https://blog.alexellis.io/kubernetes-marketplace-two-year-update/)
+
 ```bash
 curl -sLS https://get.arkade.dev | sudo sh
 ```
 
 ### [Minio](https://min.io)
+
 ```bash
 arkade install minio --help
 ```
+
 ```
 Install minio
 
@@ -30,7 +34,7 @@ Flags:
       --namespace string    Kubernetes namespace for the application (default "default")
       --persistence         Enable persistence
       --secret-key string   Provide a secret key to override the pre-generated value
-      --set stringArray     Use custom flags or override existing flags 
+      --set stringArray     Use custom flags or override existing flags
                             (example --set persistence.enabled=true)
       --update-repo         Update the helm repo (default true)
 
@@ -38,6 +42,7 @@ Global Flags:
       --kubeconfig string   Local path for your kubeconfig file
       --wait                If we should wait for the resource to be ready before returning (helm3 only, default false)
 ```
+
 ```
 Info for app: minio
 # Forward the minio port to your machine
@@ -56,17 +61,26 @@ mc config host add minio http://127.0.0.1:9000 $ACCESSKEY $SECRETKEY
 # List buckets
 mc ls minio
 ```
-* Export Port for External Access
+
+- Create Minio with PersistentVolume
+  - About Creation of PV, please refer to [rainforest-devops](../rainforest-devops/volumes/README.md)
+    ```bash
+    ark install minio --set persistence.enabled=true \
+                      --set persistence.existingClaim=[PVC NAME] \
+                      --update-repo --namespace minio
+    ```
+- Export Port for External Access
   ```bash
   kubectl patch svc {{ SERVICE NAME }} -p '{"spec":{"externalIPs":[ {{ EXTERNAL IP }} ]}}'
   ```
 
 ### Setup MLflow Server
-* Prepare Environment
+
+- Prepare Environment
   ```bash
   poetry install
   ```
-* Config Environment Variables
+- Config Environment Variables
   ```bash
   # .env
   PORT=                 # External Port
@@ -74,16 +88,16 @@ mc ls minio
   ACCESS_KEY_ID=        # ACCESSKEY for Minio
   SECRET_ACCESS_KEY=    # SECRETKEY for Minio
   ```
-* `$HOME/.aws/credentials`
+- `$HOME/.aws/credentials`
   ```
   [default]
   aws_access_key_id=      # ACCESSKEY for Minio
   aws_secret_access_key=  # SECRETKEY for Minio
   ```
-* Create System Service
+- Create System Service
   ```
   ln -s {{ PATH TO }}/mlflow-tracking.service /etc/systemd/system/
   sudo systemctl daemon-reload
-  sudo systemctl enable mlflow-tracking 
-  sudo systemctl start mlflow-tracking 
+  sudo systemctl enable mlflow-tracking
+  sudo systemctl start mlflow-tracking
   ```
