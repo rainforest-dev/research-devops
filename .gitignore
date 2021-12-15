@@ -1,1 +1,3 @@
-mlflow_server/.env
+.env
+__pycache__
+*.whl

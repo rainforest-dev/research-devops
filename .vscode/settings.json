@@ -1,0 +1,7 @@
+{
+  "python.testing.pytestArgs": [
+    "mlflow_model_serve"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
+}
