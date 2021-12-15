@@ -1,0 +1,58 @@
+FROM python:3.8 AS prepare
+
+RUN pip install mlflow[extras]
+RUN pip install python-dotenv
+
+COPY .env .env
+COPY download_registered_model.py download_registered_model.py
+
+RUN --mount=type=secret,id=aws,target=/root/.aws/credentials \
+  python download_registered_model.py -n test -v 4
+
+FROM continuumio/miniconda3 AS build
+
+ENV MLFLOW_HOME /opt/mlflow
+ENV MLFLOW_VERSION 1.22.0
+
+RUN conda install -c conda-forge conda-pack
+RUN conda install -c conda-forge mlflow=${MLFLOW_VERSION}
+
+COPY --from=prepare model/ ${MLFLOW_HOME}/model
+
+WORKDIR ${MLFLOW_HOME}
+
+RUN apt-get update && \
+  apt-get install -y build-essential curl
+
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN cargo --help
+
+RUN mlflow models prepare-env -m ${MLFLOW_HOME}/model
+
+RUN export CONDA_ENV=$(conda env list | grep -E -o -m 1 'mlflow-\w+' | head -1) && \
+  conda-pack -n $CONDA_ENV -o /tmp/env.tar && \
+  mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
+  rm /tmp/env.tar
+
+RUN /venv/bin/conda-unpack
+
+FROM debian:buster AS runtime
+
+ENV MLFLOW_HOME /opt/mlflow
+ENV PORT 5000
+
+COPY --from=build /venv ${MLFLOW_HOME}/.venv
+COPY --from=prepare model/ ${MLFLOW_HOME}/model
+
+WORKDIR ${MLFLOW_HOME}
+RUN useradd -d ${MLFLOW_HOME} mlflow
+RUN chown mlflow: ${MLFLOW_HOME}
+USER mlflow
+
+SHELL ["/bin/bash", "-c"]
+
+EXPOSE ${PORT}
+
+ENTRYPOINT source .venv/bin/activate && \
+  mlflow models serve -m ${MLFLOW_HOME}/model --host 0.0.0.0 --port ${PORT} --no-conda
