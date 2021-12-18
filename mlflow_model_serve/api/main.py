@@ -42,7 +42,7 @@ async def predict(model_name: str, model_version: int, file: UploadFile = File(.
 
   img = torch.unsqueeze(F.to_tensor(img), 0)
   y_hat = models[model](img)
-  return y_hat.detach().numpy().flatten().tolist()
+  return {'data': y_hat.detach().numpy().flatten().tolist()}
 
 
 @app.post('/predict/{run_id}')
@@ -59,8 +59,8 @@ async def predict(run_id: str, file: UploadFile = File(...), inverse: bool = Tru
   y_hat = y_hat.detach().numpy().flatten().tolist()
 
   if inverse:
-    return transform(run_id=run_id, value=y_hat, inverse=inverse)
-  return y_hat
+    return {'data': transform(run_id=run_id, value=y_hat, inverse=inverse)}
+  return {'data': y_hat}
 
 
 def scaler_builder(state_dict: dict, args: dict, local_path: str, config_path: str):
@@ -83,4 +83,4 @@ def transform(run_id: str, value: List[float] = [], inverse: bool = False):
 
 @app.post('/scaler/{run_id}')
 async def normalize(run_id: str, value: List[float] = [], inverse: bool = False):
-  return transform(run_id=run_id, value=value, inverse=inverse)
+  return {'data': transform(run_id=run_id, value=value, inverse=inverse)}
