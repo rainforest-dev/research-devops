@@ -1,7 +1,6 @@
 import os
 from typing import List
 from dotenv import load_dotenv
-import requests
 from fastapi import FastAPI, File, UploadFile, Form, Request
 import numpy as np
 from mlflow.tracking import MlflowClient
