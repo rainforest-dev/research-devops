@@ -21,7 +21,7 @@ def about():
   return 'tracking and visualizing results of Multi-objective Genetic Algorithm on Mlflow'
 
 
-@app.post('/nacre/{params}')
+@app.get('/nacre/{params}')
 async def nacre_image(background_tasks: BackgroundTasks,
                       params: str,
                       img_size: Optional[int] = 512,

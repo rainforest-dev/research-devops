@@ -1,8 +1,11 @@
-<template>
-  <div>{{ JSON.stringify(data) }}</div>
+<template lang="pug">
+.container.mx-auto.flex-center.full
+  .flex-shrink
+    NacrePreview
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import NacrePreview from "@/components/NacrePreview.vue";
 
 export default defineComponent({
   setup() {
@@ -14,5 +17,6 @@ export default defineComponent({
     };
     return { data };
   },
+  components: { NacrePreview },
 });
 </script>
