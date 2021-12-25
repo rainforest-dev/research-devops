@@ -2,3 +2,4 @@
 __pycache__
 *.whl
 .DS_Store
+moga_tracking/backend/tmp/gens

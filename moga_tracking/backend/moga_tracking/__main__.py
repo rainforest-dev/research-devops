@@ -14,10 +14,12 @@ import tempfile
 from research_utils.sqlite.functional import create_connection, query
 from research_utils.sqlite.row_factory import dict_factory
 from research_utils.sqlite.typing.operator import AND, Lower, SQLArgumentFactory, Upper
+from .routers import mlflow
 
 load_dotenv()
 
 app = FastAPI(title='MOGA Tracking')
+app.include_router(mlflow.router)
 
 
 @app.get('/about')

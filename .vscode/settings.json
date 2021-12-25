@@ -1,7 +1,9 @@
 {
-  "python.testing.pytestArgs": [
-    "mlflow_model_serve"
-  ],
+  "python.testing.pytestArgs": ["mlflow_model_serve"],
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "cSpell.words": [
+    "mlflow",
+    "moga"
+  ]
 }
