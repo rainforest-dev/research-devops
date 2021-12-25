@@ -4,6 +4,7 @@ import random
 from typing import List, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 from moga_tracking.utils import is_float
 import numpy as np
 from research_data.utils import paramToImg
@@ -19,6 +20,14 @@ from .routers import mlflow
 load_dotenv()
 
 app = FastAPI(title='MOGA Tracking')
+
+origins = ["*"]
+app.add_middleware(CORSMiddleware,
+                   allow_origins=origins,
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"])
+
 app.include_router(mlflow.router)
 
 
