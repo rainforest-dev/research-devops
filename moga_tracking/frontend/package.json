@@ -7,9 +7,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "apexcharts": "^3.32.1",
     "daisyui": "^1.16.6",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.4",
