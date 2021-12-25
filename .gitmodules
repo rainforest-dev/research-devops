@@ -1,3 +1,6 @@
 [submodule "rainforest-devops"]
 	path = rainforest-devops
 	url = https://github.com/rainforest-tools/rainforest-devops.git
+[submodule "research-data"]
+	path = research-data
+	url = https://github.com/r08521610/research-data.git
