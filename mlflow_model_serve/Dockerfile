@@ -17,7 +17,7 @@ ENV PATH=/root/.local/bin:$PATH
 
 COPY .env .env
 COPY api /app/api
-COPY .aws/credentials /root/.aws/credentials
+COPY ../.aws/credentials /root/.aws/credentials
 
 WORKDIR /app
 
