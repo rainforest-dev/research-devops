@@ -4,6 +4,7 @@
   "python.testing.pytestEnabled": true,
   "cSpell.words": [
     "mlflow",
-    "moga"
+    "moga",
+    "vite"
   ]
 }
