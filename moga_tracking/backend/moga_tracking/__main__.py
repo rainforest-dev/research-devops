@@ -67,15 +67,16 @@ async def nacre_image(background_tasks: BackgroundTasks,
   return FileResponse(path=path, filename=f'{filename}.{format}')
 
 
-@app.websocket('/ws')
-async def websocket_endpoint(websocket: WebSocket):
-  logging.info('Accepting client connection...')
-  await websocket.accept()
-  while True:
-    try:
-      await websocket.receive_text()
-      resp = {'value': random.uniform(0, 1)}
-      await websocket.send_json(resp)
-    except Exception as err:
-      logging.error(err)
-      break
+# TODO: disable temperately
+# @app.websocket('/ws')
+# async def websocket_endpoint(websocket: WebSocket):
+#   logging.info('Accepting client connection...')
+#   await websocket.accept()
+#   while True:
+#     try:
+#       await websocket.receive_text()
+#       resp = {'value': random.uniform(0, 1)}
+#       await websocket.send_json(resp)
+#     except Exception as err:
+#       logging.error(err)
+#       break
