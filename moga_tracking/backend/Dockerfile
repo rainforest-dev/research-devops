@@ -3,7 +3,7 @@ FROM base AS builder
 
 ENV RESEARCH_DATA_WHEEL=research_data-0.0.3-py3-none-any.whl
 ENV RESEARCH_WHEEL=research-0.0.4-py3-none-any.whl
-ENV RESEARCH_MOGA_WHEEL=research_moga-0.0.2-py3-none-any.whl
+ENV RESEARCH_MOGA_WHEEL=research_moga-0.0.3-py3-none-any.whl
 
 COPY pyproject.toml pyproject.toml
 COPY ${RESEARCH_DATA_WHEEL} ${RESEARCH_DATA_WHEEL}

@@ -5,8 +5,10 @@ from dotenv import load_dotenv
 import yaml
 from fastapi import APIRouter
 from fastapi.params import Path, Query
+from starlette.responses import FileResponse
 from mlflow.tracking import MlflowClient
 from research_moga.utils import download_artifacts, glob_gens_yaml_to_dicts, params2id
+from research_moga.visualize import scatter
 from ..typing import MlflowRunInfoType
 
 load_dotenv()
@@ -45,3 +47,10 @@ def moga_gens(run_id: str, gen_id: Optional[int] = Query(None), num: Optional[in
   else:
     results = glob_gens_yaml_to_dicts(path=local_path)
     return results
+
+
+@router.get('/{run_id}/moga/visualization/')
+@router.get('/{run_id}/moga/visualization/{palette}')
+def moga_visualize(run_id: str, palette: str = 'PuBu'):
+  path = scatter(run_id=run_id, client=client, out_dir='./tmp', palette=palette)
+  return FileResponse(path=path, filename=f'scatter_{run_id}.png')
