@@ -1,5 +1,6 @@
 from typing import Optional
 import os
+import random
 from dotenv import load_dotenv
 import yaml
 from fastapi import APIRouter
@@ -29,7 +30,7 @@ def transform(item: dict):
 
 @router.get('/{run_id}/moga/gens/')
 @router.get('/{run_id}/moga/gens/{gen_id}')
-def moga_gens(run_id: str, gen_id: Optional[int] = Query(None)):
+def moga_gens(run_id: str, gen_id: Optional[int] = Query(None), num: Optional[int] = Query(None)):
   local_path = download_artifacts(run_id=run_id,
                                   remote_path='gens',
                                   local_path=os.getenv('TMP', 'tmp'),
@@ -37,7 +38,10 @@ def moga_gens(run_id: str, gen_id: Optional[int] = Query(None)):
   if gen_id is not None:
     result = yaml.load(open(f'{local_path}/gen_{gen_id}.yml'), yaml.Loader)
     result = [transform(item) for item in result.values()]
-    return result
+    if num is None:
+      return result
+    num = min(num, len(result))
+    return random.sample(result, num)
   else:
     results = glob_gens_yaml_to_dicts(path=local_path)
     return results

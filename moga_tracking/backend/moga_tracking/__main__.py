@@ -5,6 +5,7 @@ from typing import List, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.params import Query
 from moga_tracking.utils import is_float
 import numpy as np
 from research_data.utils import paramToImg
@@ -37,7 +38,7 @@ def about():
 
 
 @app.get('/db/{table}/')
-async def db(table: str, fields: str, vf: str):
+async def db(table: str, fields: str, vf: str, num: Optional[int] = Query(None)):
   fields = [item for item in fields.split('-')]
   where = Lower('total_area', 0.25)
   if vf is not None:
@@ -53,7 +54,10 @@ async def db(table: str, fields: str, vf: str):
       where = AND(where, Upper('volume_fraction', lower))
   conn = create_connection(os.getenv('DB_PATH'))
   rows = query(conn, table_name=table, fields=fields, row_factory=dict_factory, where=where)
-  return rows
+  if num is None:
+    return rows
+  num = min(num, len(rows))
+  return random.sample(rows, num)
 
 
 @app.get('/nacre/{params}')
