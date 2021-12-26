@@ -38,6 +38,22 @@ npm install --save vue-apexcharts
 npm install --save vue3-apexcharts
 ```
 
+* [class-transformer](https://github.com/typestack/class-transformer)
+```bash
+npm install class-transformer --save
+npm install reflect-metadata --save
+```
+```html
+<!-- index.html -->
+<html>
+  <head>
+    <!-- ... -->
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+  </head>
+  <!-- ... -->
+</html>
+```
+
 # Vue 3 + Typescript + Vite
 
 This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
