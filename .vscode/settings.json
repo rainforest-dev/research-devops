@@ -3,8 +3,12 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "cSpell.words": [
+    "apexchart",
+    "daisyui",
     "mlflow",
     "moga",
-    "vite"
+    "vite",
+    "xaxis",
+    "yaxis"
   ]
 }

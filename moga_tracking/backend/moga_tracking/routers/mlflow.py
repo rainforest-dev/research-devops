@@ -52,5 +52,9 @@ def moga_gens(run_id: str, gen_id: Optional[int] = Query(None), num: Optional[in
 @router.get('/{run_id}/moga/visualization/')
 @router.get('/{run_id}/moga/visualization/{palette}')
 def moga_visualize(run_id: str, palette: str = 'PuBu'):
-  path = scatter(run_id=run_id, client=client, out_dir='./tmp', palette=palette)
+  path = scatter(run_id=run_id,
+                 db_path=os.getenv('DB_PATH'),
+                 client=client,
+                 out_dir='./tmp',
+                 palette=palette)
   return FileResponse(path=path, filename=f'scatter_{run_id}.png')
