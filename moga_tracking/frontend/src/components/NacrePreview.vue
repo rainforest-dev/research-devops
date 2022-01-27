@@ -40,10 +40,11 @@
 <script lang="ts">
 import { computed, defineComponent, reactive } from "vue";
 import { Field, FieldType } from "@/types/form";
+import { Field as NacreField } from "@/types/nacre"
 
 const a = typeof defineComponent;
 
-const designSpaces: Field[] = [
+const designSpaces: Field<NacreField>[] = [
   { name: "s1", type: FieldType.Boolean },
   { name: "s2", type: FieldType.Boolean },
   { name: "s3", type: FieldType.Boolean },
@@ -61,7 +62,7 @@ const designSpaces: Field[] = [
   { name: "Lc", type: FieldType.Number },
 ];
 
-const defaultParams: { [key: string]: boolean | number | string } = {
+const defaultParams: { [key in NacreField]: boolean | number | string } = {
   s1: 1,
   s2: 0,
   s3: 1,
@@ -79,7 +80,7 @@ const defaultParams: { [key: string]: boolean | number | string } = {
   Lc: 59,
 };
 
-const _defaultValue = (field: Field, params = defaultParams) => {
+const _defaultValue = (field: Field<NacreField>, params = defaultParams) => {
   const value = params[field.name];
   switch (field.type) {
     case FieldType.Boolean:

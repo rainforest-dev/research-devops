@@ -4,8 +4,8 @@ export enum FieldType {
   Number,
 }
 
-export interface Field {
-  name: string;
+export interface Field<T = string> {
+  name: T;
   type: FieldType;
   validation?: () => boolean;
 }

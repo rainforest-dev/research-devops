@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import "reflect-metadata";
 import { router } from "./routes";
 import VueApexCharts from "vue3-apexcharts";
 import App from "./App.vue";
