@@ -8,20 +8,21 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { Expose, plainToClass } from "class-transformer";
-import "lodash.product"
+import { classToPlain, Expose, plainToClass } from "class-transformer";
+import "lodash.product";
 // @ts-ignore
-import {product} from "lodash"
-import { designSpace } from "@/utils/constants"
-import { id } from "@/utils"
+import { product } from "lodash";
+import { StorageOptions, useStorage } from "@vueuse/core";
+import { designSpace } from "@/utils/constants";
+import { id } from "@/utils";
 
 class Item {
-  parameters!: number[]
-  disabled: boolean = false
+  parameters!: number[];
+  disabled: boolean = false;
 
-  @Expose()
+  @Expose({ name: "id" })
   get id() {
-    return id(this.parameters)
+    return id(this.parameters);
   }
   @Expose()
   get src() {
@@ -30,15 +31,29 @@ class Item {
   }
 }
 
-const items = ref<Item[]>((product(...Object.values(designSpace)) as number[][]).map(parameters => plainToClass(Item, {parameters})))
+const items = useStorage<Item[]>(
+  "items",
+  (product(...Object.values(designSpace)) as number[][]).map((parameters) =>
+    plainToClass(Item, { parameters })
+  ),
+  undefined,
+  {
+    serializer: {
+      read: (v: any) => deserializeArray(Item, v),
+      write: (items: Item[]) => items.map(v => classToPlain(v))
+    }
+  } as StorageOptions<Item[]>
+);
 
 const handleClick = (id: string) => {
-  items.value = [...items.value.map(e => {
-    if (e.id === id) {
-      e.disabled = !e.disabled 
-      return e
-    }
-    return e 
-  })]
-}
+  items.value = [
+    ...items.value.map((e) => {
+      if (e.id === id) {
+        e.disabled = !e.disabled;
+        return e;
+      }
+      return e;
+    }),
+  ];
+};
 </script>
