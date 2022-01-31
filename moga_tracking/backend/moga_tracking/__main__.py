@@ -7,16 +7,10 @@ from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Query
 from moga_tracking.utils import is_float
-import numpy as np
-from research_data.utils import paramToImg
-from starlette.background import BackgroundTasks
-from starlette.responses import FileResponse
-from PIL import Image
-import tempfile
 from research_utils.sqlite.functional import create_connection, query
 from research_utils.sqlite.row_factory import dict_factory
 from research_utils.sqlite.typing.operator import AND, Lower, SQLArgumentFactory, Upper
-from .routers import mlflow
+from .routers import mlflow, nacre
 
 load_dotenv()
 
@@ -30,6 +24,7 @@ app.add_middleware(CORSMiddleware,
                    allow_headers=["*"])
 
 app.include_router(mlflow.router)
+app.include_router(nacre.router)
 
 
 @app.get('/about')
@@ -58,28 +53,6 @@ async def db(table: str, fields: str, vf: str, num: Optional[int] = Query(None))
     return rows
   num = min(num, len(rows))
   return random.sample(rows, num)
-
-
-@app.get('/nacre/{params}')
-async def nacre_image(background_tasks: BackgroundTasks,
-                      params: str,
-                      img_size: Optional[int] = 512,
-                      format: str = 'jpg',
-                      unit_cell: bool = False):
-  params = [int(item) for item in params.split('_')]
-  img = paramToImg(param=params, is_unit_cell=unit_cell, chromosome_length=img_size)
-  filename = f'{"".join(str(item) for item in params)}'
-  # [reference](https://stackoverflow.com/a/64717120)
-  _, path = tempfile.mkstemp(suffix=f'.{format}')
-  if format == 'jpg' or format == 'png':
-    img = Image.fromarray(img * 255)
-    img.save(path)
-  elif format == 'npy':
-    # !currently broken
-    np.save(path, img)
-
-  background_tasks.add_task(lambda path: os.unlink(path), path)
-  return FileResponse(path=path, filename=f'{filename}.{format}')
 
 
 # TODO: disable temperately

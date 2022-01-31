@@ -11,9 +11,9 @@ uvicorn = {extras = ["standard"], version = "^0.16.0"}
 python-dotenv = "^0.19.2"
 mlflow = "^1.22.0"
 boto3 = "^1.20.26"
-research-data = {path = "research_data-0.0.3-py3-none-any.whl"}
-research = {path = "research-0.0.4-py3-none-any.whl"}
-research-moga = {path = "research_moga-0.0.3-py3-none-any.whl"}
+research-data = {git = "https://github.com/r08521610/research-data.git", rev = "v0.0.4"}
+research = {git = "https://github.com/r08521610/research.git", rev = "0.0.5"}
+research-moga = {git = "https://github.com/r08521610/research.git", rev = "moga0.0.7"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

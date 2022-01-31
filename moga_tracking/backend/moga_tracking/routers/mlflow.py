@@ -7,7 +7,8 @@ from fastapi import APIRouter
 from fastapi.params import Path, Query
 from starlette.responses import FileResponse
 from mlflow.tracking import MlflowClient
-from research_moga.utils import download_artifacts, glob_gens_yaml_to_dicts, params2id
+from research_utils.mlflow.client import download_artifacts
+from research_moga.utils import glob_gens_yaml_to_dicts, params2id
 from research_moga.visualize import scatter
 from ..typing import MlflowRunInfoType
 
