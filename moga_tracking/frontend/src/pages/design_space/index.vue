@@ -8,11 +8,11 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { classToPlain, Expose, plainToClass } from "class-transformer";
+import { classToPlain, deserializeArray, Expose, plainToClass } from "class-transformer";
 import "lodash.product";
 // @ts-ignore
 import { product } from "lodash";
-import { StorageOptions, useStorage } from "@vueuse/core";
+import { useStorage } from "@vueuse/core";
 import { designSpace } from "@/utils/constants";
 import { id } from "@/utils";
 
@@ -31,7 +31,7 @@ class Item {
   }
 }
 
-const items = useStorage<Item[]>(
+const items = useStorage(
   "items",
   (product(...Object.values(designSpace)) as number[][]).map((parameters) =>
     plainToClass(Item, { parameters })
@@ -39,10 +39,10 @@ const items = useStorage<Item[]>(
   undefined,
   {
     serializer: {
-      read: (v: any) => deserializeArray(Item, v),
-      write: (items: Item[]) => items.map(v => classToPlain(v))
+      read: (v: any) => v ? deserializeArray(Item, v) : [],
+      write: (items: Item[]) => JSON.stringify(items.map(v => classToPlain(v)))
     }
-  } as StorageOptions<Item[]>
+  }
 );
 
 const handleClick = (id: string) => {
