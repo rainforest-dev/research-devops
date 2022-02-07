@@ -4,11 +4,21 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    // {
-    //   "name": "Initialize: Backend",
-    //   "cwd": "${workspaceFolder}/backend",
-    //   "command": "poetry install"
-    // },
+    {
+      "name": "Backend: Dev",
+      "type": "python",
+      "cwd": "${workspaceFolder}/backend",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "moga_tracking.__main__:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "3000"
+      ],
+      "preLaunchTask": "poetry"
+    },
     {
       "name": "Frontend: Dev",
       "cwd": "${workspaceFolder}/frontend",

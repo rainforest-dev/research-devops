@@ -4,7 +4,10 @@
     {
       "type": "shell",
       "label": "poetry",
-      "command": "poetry install"
+      "command": "poetry install",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      }
     },
     {
       "type": "shell",
