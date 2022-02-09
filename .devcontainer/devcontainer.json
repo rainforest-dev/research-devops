@@ -31,13 +31,17 @@
 		"esbenp.prettier-vscode",
 		"visualstudioexptteam.vscodeintellicode",
 		"streetsidesoftware.code-spell-checker",
-		"ms-python.python",
-		"ms-python.vscode-pylance",
 		"ms-azuretools.vscode-docker",
-		"withfig.fig",
 		"eamodio.gitlens",
+		// frontend
 		"Wscats.vue",
 		"johnsoncodehk.volar",
+		"bradlc.vscode-tailwindcss",
+		"heybourn.headwind",
+		"antfu.vite",
+		// backend
+		"ms-python.python",
+		"ms-python.vscode-pylance",
 		"KevinRose.vsc-python-indent",
 		"njpwerner.autodocstring",
 		"donjayamanne.python-environment-manager"
