@@ -1,0 +1,9 @@
+version: '3'
+services:
+  mlflow_model_serve:
+    build:
+      context: ./mlflow_model_serve
+      dockerfile: Dockerfile
+    volumes:
+      - ~/.aws:~/.aws
+      - .env:.env

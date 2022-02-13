@@ -1,7 +1,10 @@
 FROM python:3.8.12-slim-buster AS base
 FROM base AS builder
 
+RUN apt-get -qy update && apt-get install --no-install-recommends -y git libev-dev
+
 COPY pyproject.toml pyproject.toml
+COPY poetry.lock poetry.lock
 
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
@@ -15,9 +18,7 @@ FROM base AS runtime
 COPY --from=builder ${PYTHONPATH} ${PYTHONPATH}
 ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
-COPY .env .env
 COPY api /app/api
-COPY ./.aws/credentials /root/.aws/credentials
 
 WORKDIR /app
 
