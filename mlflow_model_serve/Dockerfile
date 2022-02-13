@@ -3,7 +3,6 @@ FROM base AS builder
 
 RUN apt-get -qy update && apt-get install --no-install-recommends -y git libev-dev
 
-ARG GIT_ACCESS_TOKEN
 RUN --mount=type=secret,id=GIT_ACCESS_TOKEN git config --global url."https://$(cat /run/secrets/github_token)@github.com".insteadOf "ssh://git@github.com"
 
 COPY pyproject.toml pyproject.toml
