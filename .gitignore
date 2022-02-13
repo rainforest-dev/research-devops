@@ -1,3 +1,7 @@
 .env
 __pycache__
 *.whl
+.DS_Store
+.aws
+mlflow_model_serve/mlruns/0
+mlflow_model_serve/models

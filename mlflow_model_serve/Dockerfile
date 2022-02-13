@@ -1,23 +1,24 @@
 FROM python:3.8.12-slim-buster AS base
 FROM base AS builder
 
-ENV RESEARCH_WHEEL=research-0.0.3-py3-none-any.whl
+RUN apt-get -qy update && apt-get install --no-install-recommends -y git libev-dev
 
-COPY requirements.txt requirements.txt
-COPY ${RESEARCH_WHEEL} ${RESEARCH_WHEEL}
+COPY pyproject.toml pyproject.toml
+COPY poetry.lock poetry.lock
+
+ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
 RUN pip install --user pip -U
-RUN pip install --user -r requirements.txt
-RUN pip install --user ${RESEARCH_WHEEL}
+RUN pip3 install poetry
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-dev
 
 FROM base AS runtime
 
-COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
+COPY --from=builder ${PYTHONPATH} ${PYTHONPATH}
+ENV PYTHONPATH=${PYTHONPATH}:${PWD}
 
-COPY .env .env
 COPY api /app/api
-COPY .aws/credentials /root/.aws/credentials
 
 WORKDIR /app
 

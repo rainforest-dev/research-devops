@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "moga-tracking"
+version = "0.0.1"
+description = ""
+authors = ["Rainforest Cheng <rainforestnick@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.7.1, <3.10"
+fastapi = "^0.70.1"
+uvicorn = {extras = ["standard"], version = "^0.16.0"}
+python-dotenv = "^0.19.2"
+mlflow = "^1.22.0"
+boto3 = "^1.20.26"
+research-data = {git = "https://github.com/r08521610/research-data.git", rev = "v0.0.4"}
+research = {git = "https://github.com/r08521610/research.git", rev = "0.0.5"}
+research-moga = {git = "https://github.com/r08521610/research.git", rev = "moga0.0.7"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+yapf = "^0.31.0"
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.1"
+tag_format = "v$version"
+version_files = [
+  "pyproject.toml:version",
+  "moga_tracking/__version__.py",
+]
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

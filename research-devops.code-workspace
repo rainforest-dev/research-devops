@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "research-devops",
+			"path": "."
+		},
+		{
+			"path": "mlflow_model_serve"
+		},
+		{
+			"path": "moga_tracking"
+		},
+	],
+	"settings": {}
+}
