@@ -3,7 +3,8 @@ FROM base AS builder
 
 RUN apt-get -qy update && apt-get install --no-install-recommends -y git libev-dev
 
-RUN --mount=type=secret,id=GIT_ACCESS_TOKEN git config --global url."https://$(cat /run/secrets/GIT_ACCESS_TOKEN)@github.com".insteadOf "https://github.com/"
+RUN --mount=type=secret,id=GIT_ACCESS_TOKEN echo $(cat /run/secrets/GIT_ACCESS_TOKEN)
+RUN --mount=type=secret,id=GIT_ACCESS_TOKEN git config --global url."https://$(cat /run/secrets/GIT_ACCESS_TOKEN)@github.com/".insteadOf "https://github.com/"
 
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
