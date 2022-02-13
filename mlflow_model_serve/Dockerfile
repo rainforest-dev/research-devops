@@ -3,6 +3,9 @@ FROM base AS builder
 
 RUN apt-get -qy update && apt-get install --no-install-recommends -y git libev-dev
 
+ARG GIT_ACCESS_TOKEN
+RUN git config --global url."https://${GIT_ACCESS_TOKEN}@github.com".insteadOf "ssh://git@github.com"
+
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
 
