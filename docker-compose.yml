@@ -7,3 +7,9 @@ services:
     volumes:
       - ~/.aws:~/.aws
       - .env:.env
+    secrets:
+      - GIT_ACCESS_TOKEN
+
+secrets:
+  GIT_ACCESS_TOKEN:
+    external: true
