@@ -15,7 +15,8 @@
 		"conventionalCommits.scopes": [
 			"research-devops",
 			"mlflow_model_serve",
-			"moga_tracking"
+			"moga_tracking",
+			"devcontainer"
 		]
 	}
 }
