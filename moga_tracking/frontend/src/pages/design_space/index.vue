@@ -1,9 +1,9 @@
 <template lang="pug">
 .grid.grid-cols-10.full.gap-4
   .dropdown.dropdown-hover(v-for="item in items" :key="item.id" @click="handleClick(item.id)")
-    .grid.grid-cols-3.cursor-pointer(:class="[item.disabled && 'brightness-50']")
+    .grid.grid-cols-3.cursor-pointer(:class="[item.disabled && 'border-8 border-info']")
       .aspect-square.border.border-neutral(v-for="cell, index in item.parameters" :key="`${item.id}-${index}`" :class="[cell === 0 ? 'bg-black' : 'bg-white']")
-    .dropdown-content.bg-base-100.p-4.w-96.shadow-xl.border.card
+    .dropdown-content.bg-base-100.p-4.w-96.shadow-xl.border.card.delay-500
       img.aspect-square.border(:src="item.src")
 .fixed.right-0.bottom-0.card
   .card-body

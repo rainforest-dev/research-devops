@@ -10,9 +10,11 @@ services:
         - NODE_VERSION=lts/*
     volumes:
       - .:/workspace:cached
+      - ~/.aws:/home/vscode/.aws:cached
       # Persist VS Code extensions between rebuilds
       - vscode-extensions:/root/.vscode-server/extensions
       - ~/.zhistory:/home/vscode/.zhistory:cached
+    network_mode: host
     command: /bin/sh -c "while sleep 1000; do :; done"
 
 volumes:
