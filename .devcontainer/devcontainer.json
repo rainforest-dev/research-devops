@@ -43,7 +43,8 @@
 		"KevinRose.vsc-python-indent",
 		"njpwerner.autodocstring",
 		"donjayamanne.python-environment-manager",
-		"humao.rest-client"
+		"humao.rest-client",
+		"mhutchie.git-graph"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
