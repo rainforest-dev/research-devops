@@ -18,6 +18,8 @@ export class NacreDB {
   strength?: number;
   @Expose({ name: "total_area" })
   toughness?: number;
+  @Expose({ name: "toughness_index" })
+  toughnessIndex?: number;
   @Expose({ name: "preview_unit_cell" })
   @Transform(({ value }) => url(`/${value}`))
   previewUnitCell?: string;
@@ -36,4 +38,8 @@ export class NacreDB {
   @Expose({ name: "raw_512" })
   @Transform(({ value }) => url(`/${value}`))
   raw512?: string;
+
+  isBrittle(threshold: number) {
+    return (this.toughnessIndex ?? 0) <= threshold;
+  }
 }
