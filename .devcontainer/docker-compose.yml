@@ -10,6 +10,7 @@ services:
         - NODE_VERSION=lts/*
     volumes:
       - .:/workspace:cached
+      - research-data:/workspace:cached
       - ~/.aws:/home/vscode/.aws:cached
       # Persist VS Code extensions between rebuilds
       - vscode-extensions:/root/.vscode-server/extensions
@@ -19,3 +20,6 @@ services:
 
 volumes:
   vscode-extensions:
+  research-data:
+    external: true
+    name: research-data-main-a3d6636a90e96baeb533a53edccec31c

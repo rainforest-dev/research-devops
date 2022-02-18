@@ -33,22 +33,30 @@ def about():
 
 
 @app.get('/db/{table}/')
-async def db(table: str, fields: str, vf: str, num: Optional[int] = Query(None)):
+async def db(table: str, fields: str, vf: str,
+             num: Optional[int] = Query(None)):
   fields = [item for item in fields.split('-')]
   where = Lower('total_area', 0.25)
   if vf is not None:
-    vf = tuple([float(item) if is_float(item) else None for item in vf.split('-')])
+    vf = tuple(
+        [float(item) if is_float(item) else None for item in vf.split('-')])
     lower, upper = vf
     if lower and upper:
       where = AND(
-          where, SQLArgumentFactory.between('volume_fraction', lower_bound=lower,
-                                            upper_bound=upper))
+          where,
+          SQLArgumentFactory.between('volume_fraction',
+                                     lower_bound=lower,
+                                     upper_bound=upper))
     elif not lower and upper:
       where = AND(where, Lower('volume_fraction', upper))
     elif not upper and lower:
       where = AND(where, Upper('volume_fraction', lower))
   conn = create_connection(os.getenv('DB_PATH'))
-  rows = query(conn, table_name=table, fields=fields, row_factory=dict_factory, where=where)
+  rows = query(conn,
+               table_name=table,
+               fields=fields,
+               row_factory=dict_factory,
+               where=where)
   if num is None:
     return rows
   num = min(num, len(rows))
