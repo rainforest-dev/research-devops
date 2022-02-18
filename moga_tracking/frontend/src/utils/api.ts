@@ -3,6 +3,8 @@ import { plainToClass } from "class-transformer";
 
 const _url = (url: string) => `${import.meta.env.VITE_API_ENDPOINT}${url}`;
 
+export const url = _url;
+
 export const getRunInfo = async (
   runId: string,
   infoKey: string,
@@ -19,22 +21,39 @@ export const getRunInfo = async (
 export const getDBTable = async (
   table: string,
   fields: string[],
-  volumeFraction: number[] = [0, 1],
-  num: number = 300
+  num?: number,
+  volumeFraction: number[] = [0, 1]
 ) => {
   try {
     const params: { [key: string]: string } = {
       fields: fields.join("-"),
-      num: num.toString(),
     };
-    if (volumeFraction.length > 0)
-      params["vf"] = volumeFraction.map((e) => (e ? e : "")).join("-");
+    if (num) params["num"] = num.toString();
+    if (volumeFraction.length > 0) params["vf"] = volumeFraction.join("-");
     const res = await fetch(
       _url(`/db/${table}?`) + new URLSearchParams(params)
     );
     const json = (await res.json()) as Array<object>;
     const data = json.map((e) => plainToClass(NacreDB, e));
     return data;
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const getDBItem = async (
+  table: string,
+  id: string,
+  fields: string[]
+) => {
+  try {
+    const params: { [key: string]: string } = {
+      fields: fields.join("-"),
+    };
+    const res = await fetch(
+      _url(`/db/${table}/${id}?`) + new URLSearchParams(params)
+    );
+    return plainToClass(NacreDB, await res.json());
   } catch (error) {
     console.warn(error);
   }

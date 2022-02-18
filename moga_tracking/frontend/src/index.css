@@ -9,11 +9,14 @@
   .full {
     @apply w-full h-full;
   }
+  .absolute-full {
+    @apply absolute top-0 bottom-0 left-0 right-0 w-full h-full;
+  }
 }
 
 html,
 body {
-  @apply full m-0 p-0;
+  @apply p-0 m-0 full;
 }
 
 #app {

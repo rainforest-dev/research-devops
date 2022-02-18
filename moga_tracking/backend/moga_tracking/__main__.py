@@ -4,12 +4,13 @@ import random
 from typing import List, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Query
 from moga_tracking.utils import is_float
 from research_utils.sqlite.functional import create_connection, query
 from research_utils.sqlite.row_factory import dict_factory
-from research_utils.sqlite.typing.operator import AND, Lower, SQLArgumentFactory, Upper
+from research_utils.sqlite.typing.operator import AND, Lower, SQLArgumentFactory, Upper, Equal
 from .routers import mlflow, nacre
 
 load_dotenv()
@@ -62,6 +63,22 @@ async def db(table: str, fields: str, vf: str,
   num = min(num, len(rows))
   return random.sample(rows, num)
 
+
+@app.get('/db/{table}/{id}')
+async def db_item(table: str, id: str, fields: str):
+  fields = [item for item in fields.split('-')]
+  conn = create_connection(os.getenv('DB_PATH'))
+  rows = query(conn,
+               table_name=table,
+               fields=fields,
+               row_factory=dict_factory,
+               where=Equal('id', id))
+  return rows[0]
+
+
+app.mount("/artifacts",
+          StaticFiles(directory=os.getenv("ARTIFACTS_PATH")),
+          name="artifacts")
 
 # TODO: disable temperately
 # @app.websocket('/ws')
