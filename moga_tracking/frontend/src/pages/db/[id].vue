@@ -1,7 +1,11 @@
 <template lang="pug">
-.collapse.collapse-arrow(tabindex="0")
-  input(type="checkbox")
-  .collapse-title.bg-transparent {{ id }}
+.collapse(tabindex="0")
+  input.min-h-min(type="checkbox")
+  .collapse-title.bg-transparent.p-0.pb-4.text-xs.min-h-min
+    .grid.grid-flow-col.grid-rows-2.gap-x-px
+      template(v-for="item, index in id.split('_')" :key="`${fields[index]}`")
+        span.flex-center.aspect-square.h-full {{ fields[index] }}
+        span.flex-center.aspect-square.h-full {{ item }}
   .collapse-content.bg-transparent
     .max-h-96.overflow-auto
       table.table
@@ -29,6 +33,8 @@ import { classToPlain } from 'class-transformer';
 import { omit } from 'lodash'
 import { getDBItem } from '@/utils/api';
 import { NacreDB } from '@/types/api';
+import { fields } from '@/types/nacre';
+
 
 const route = useRoute()
 const id = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
@@ -38,7 +44,7 @@ watchEffect(async () => {
   if (id.value)
     data.value = await getDBItem('nacre', id.value, ['*'])
 })
-const minorData = computed(() => omit(classToPlain(data.value), ['id', 'preview_unit_cell', 'raw_unit_cell', 'preview_128', 'raw_128', 'preview_512', 'raw_512', 'old_id']))
+const minorData = computed(() => omit(classToPlain(data.value), ['id', 'preview_unit_cell', 'raw_unit_cell', 'preview_128', 'raw_128', 'preview_512', 'raw_512', 'old_id', ...fields]))
 </script>
 <style lang="postcss" scoped>
 .image-links .absolute-full {

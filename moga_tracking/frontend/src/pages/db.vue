@@ -36,7 +36,7 @@ watchEffect(async () => {
 })
 
 watchEffect(() => {
-  if (!dataset.value?.find(e => e.id === id.value)) router.replace({ path: '/db' })
+  if (dataset.value && !dataset.value?.find(e => e.id === id.value)) router.replace({ path: '/db' })
 })
 </script>
 <style src="@vueform/slider/themes/default.css"></style>
