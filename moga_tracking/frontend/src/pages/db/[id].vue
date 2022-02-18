@@ -35,7 +35,8 @@ const id = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : 
 
 const data = ref<NacreDB>()
 watchEffect(async () => {
-  data.value = await getDBItem('nacre', id.value, ['*'])
+  if (id.value)
+    data.value = await getDBItem('nacre', id.value, ['*'])
 })
 const minorData = computed(() => omit(classToPlain(data.value), ['id', 'preview_unit_cell', 'raw_unit_cell', 'preview_128', 'raw_128', 'preview_512', 'raw_512', 'old_id']))
 </script>
