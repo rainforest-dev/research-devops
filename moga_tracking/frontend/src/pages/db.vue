@@ -9,7 +9,7 @@
           Slider.w-full(v-model="vf" :max="1" :step="-1")
 .grid.grid-cols-10.full.gap-4
   router-link(v-for="item in dataset" :key="item.id" :to="`/db/${item.id}`" :class="[item.id === id && 'border-8 border-info']")
-    img.aspect-square.border(:src="item.preview512")
+    img.aspect-square.border(v-lazy="item.preview512")
 .fixed.bottom-4.right-4.p-4.w-96.shadow-xl.border.card.glass
   router-view
 </template>
@@ -31,7 +31,7 @@ const id = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : 
 const dataset = ref<NacreDB[]>()
 watchEffect(async () => {
   loading.value = true
-  dataset.value = await getDBTable('nacre', ['*'], undefined, vf.value)
+  dataset.value = await getDBTable('nacre', ['id', 'preview_512'], undefined, vf.value)
   loading.value = false
 })
 

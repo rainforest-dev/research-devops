@@ -17,6 +17,7 @@
     "vue": "^3.2.26",
     "vue-router": "^4.0.12",
     "vue3-apexcharts": "^1.4.1",
+    "vue3-lazyload": "^0.2.5-beta",
     "yaml": "2.0.0-10"
   },
   "devDependencies": {
