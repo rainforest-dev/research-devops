@@ -4,8 +4,8 @@
   .collapse-title.bg-transparent.p-0.pb-4.text-xs.min-h-min
     .grid.grid-flow-col.grid-rows-2.gap-x-px
       template(v-for="item, index in id.split('_')" :key="`${fields[index]}`")
-        span.flex-center.aspect-square.h-full {{ fields[index] }}
-        span.flex-center.aspect-square.h-full {{ item }}
+        span.flex-center.aspect-square.w-full {{ fields[index] }}
+        span.flex-center.aspect-square.w-full {{ item }}
   .collapse-content.bg-transparent
     .max-h-96.overflow-auto
       table.table
