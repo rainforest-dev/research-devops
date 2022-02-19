@@ -12,7 +12,7 @@
           .flex.items-center.space-x-2
             Slider.w-full(v-model="brittleThreshold" :max="1" :step="-1")
             input.toggle(type="checkbox" v-model="isBrittleFilterEnabled")
-.grid.grid-cols-10.full.gap-4
+.grid.grid-cols-10.gap-4
   router-link(v-for="item in filtered" :key="item.id" :to="`/db/${item.id}`" :class="[item.id === id && 'border-8 border-info']")
     img.aspect-square.border(v-lazy="item.preview512")
 .fixed.bottom-4.right-4.p-4.w-96.shadow-xl.border.card.glass
