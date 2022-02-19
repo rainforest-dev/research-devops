@@ -34,10 +34,13 @@ def about():
 
 
 @app.get('/db/{table}/')
-async def db(table: str, fields: str, vf: str,
+async def db(table: str,
+             fields: str,
+             vf: str,
+             total_area: float = 0.25,
              num: Optional[int] = Query(None)):
   fields = [item for item in fields.split('-')]
-  where = Lower('total_area', 0.25)
+  where = Lower('total_area', total_area)
   if vf is not None:
     vf = tuple(
         [float(item) if is_float(item) else None for item in vf.split('-')])

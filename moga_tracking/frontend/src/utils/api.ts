@@ -22,7 +22,8 @@ export const getDBTable = async (
   table: string,
   fields: string[],
   num?: number,
-  volumeFraction: number[] = [0, 1]
+  volumeFraction: number[] = [0, 1],
+  totalArea: number = 0.25
 ) => {
   try {
     const params: { [key: string]: string } = {
@@ -30,6 +31,7 @@ export const getDBTable = async (
     };
     if (num) params["num"] = num.toString();
     if (volumeFraction.length > 0) params["vf"] = volumeFraction.join("-");
+    if (totalArea) params["total_area"] = totalArea.toString();
     const res = await fetch(
       _url(`/db/${table}?`) + new URLSearchParams(params)
     );
