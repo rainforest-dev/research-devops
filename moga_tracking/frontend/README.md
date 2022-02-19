@@ -2,11 +2,13 @@
 
 ## Packages
 
-* [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
+- [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
+
 ```bash
 npm install -D vite-plugin-pages
 npm install vue-router@next
 ```
+
 ```ts
 // vite.config.ts
 import Pages from "vite-plugin-pages";
@@ -18,6 +20,7 @@ export default {
   ],
 };
 ```
+
 ```ts
 // main.ts or routes.ts or anywhere
 import { createRouter } from "vue-router";
@@ -29,20 +32,13 @@ const router = createRouter({
 });
 ```
 
-* [APEXCHARTS.JS](https://apexcharts.com)
-```bash
-npm install --save apexcharts
-# Vue 2
-npm install --save vue-apexcharts
-# Vue 3
-npm install --save vue3-apexcharts
-```
+- [class-transformer](https://github.com/typestack/class-transformer)
 
-* [class-transformer](https://github.com/typestack/class-transformer)
 ```bash
 npm install class-transformer --save
 npm install reflect-metadata --save
 ```
+
 ```html
 <!-- index.html -->
 <html>

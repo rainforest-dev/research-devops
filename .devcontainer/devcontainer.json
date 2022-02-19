@@ -44,7 +44,13 @@
 		"njpwerner.autodocstring",
 		"donjayamanne.python-environment-manager",
 		"humao.rest-client",
-		"mhutchie.git-graph"
+		"mhutchie.git-graph",
+		"formulahendry.auto-rename-tag",
+		"formulahendry.auto-close-tag",
+		"steoates.autoimport",
+		"christian-kohler.path-intellisense",
+		"mikestead.dotenv",
+		"ms-edgedevtools.vscode-edge-devtools"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

@@ -17,6 +17,9 @@
 			"mlflow_model_serve",
 			"moga_tracking",
 			"devcontainer"
+		],
+		"cSpell.words": [
+			"Moga"
 		]
 	}
 }

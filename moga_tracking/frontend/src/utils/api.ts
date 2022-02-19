@@ -72,6 +72,6 @@ export const getGen = async (
     );
     return (await res.json()) as Nacre[];
   } catch (error) {
-    console.warn(error);
+    throw error;
   }
 };

@@ -9,14 +9,14 @@
   "dependencies": {
     "@vueform/slider": "^2.0.8",
     "@vueuse/core": "^7.5.5",
-    "apexcharts": "^3.32.1",
+    "chroma.ts": "^1.0.10",
     "class-transformer": "^0.5.1",
     "daisyui": "^1.16.6",
     "lodash.product": "^18.9.19",
     "reflect-metadata": "^0.1.13",
     "vue": "^3.2.26",
+    "vue-chart-3": "^3.1.0",
     "vue-router": "^4.0.12",
-    "vue3-apexcharts": "^1.4.1",
     "vue3-lazyload": "^0.2.5-beta",
     "yaml": "2.0.0-10"
   },
