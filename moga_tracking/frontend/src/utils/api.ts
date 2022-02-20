@@ -1,7 +1,8 @@
 import { RunInfoType, NacreDB, Nacre, Run } from "@/types/api";
 import { plainToClass } from "class-transformer";
 
-const _url = (url: string) => `${import.meta.env.VITE_API_ENDPOINT}${url}`;
+const _url = (url: string) =>
+  `${import.meta.env.VITE_API_ENDPOINT ?? ""}${url}`;
 
 export const url = _url;
 

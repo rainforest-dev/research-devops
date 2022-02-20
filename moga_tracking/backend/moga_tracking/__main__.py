@@ -4,6 +4,7 @@ import random
 from typing import List, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.params import Query
@@ -26,6 +27,17 @@ app.add_middleware(CORSMiddleware,
 
 app.include_router(mlflow.router)
 app.include_router(nacre.router)
+
+
+@app.get("/")
+async def index():
+  return FileResponse(f'{os.getenv("FRONTEND_STATIC_FILES")}index.html',
+                      media_type='text/html')
+
+
+app.mount("/static",
+          StaticFiles(directory=os.getenv("FRONTEND_STATIC_FILES")),
+          name="home")
 
 
 @app.get('/about')
