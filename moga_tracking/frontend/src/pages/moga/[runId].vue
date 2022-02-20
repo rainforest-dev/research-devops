@@ -1,12 +1,27 @@
 <template lang="pug">
-div {{ runId }}
-div {{ vf }}
+.collapse.collapse-arrow(v-for="([gen, items]) in Object.entries(selectedData)" :key="gen" :tabindex="gen")
+  input(type="checkbox")
+  .collapse-title {{ gen }}
+  .collapse-content.flex.flex-col.space-y-2
+    .card.card-side(v-for="item in items" :key="item.id")
+      figure.p-2
+        img.w-48(:src="url(`/nacre/${item.id}`)")
+      .card-body
+        .card-title {{ item.id }}
+        .stats
+          .stat
+            .stat-title Strength
+            .stat-value {{ item.strength.toFixed(2) }}
+          .stat
+            .stat-title Toughness
+            .stat-value {{ item.toughness.toFixed(2) }}
 </template>
 <script setup lang="ts">
-import { inject, reactive, watchEffect } from 'vue';
+import { computed, inject, reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import { groupBy, mapValues } from 'lodash'
 import { mogaKey } from '@/providers';
-import { getGen, getRunInfo } from '@/utils/api';
+import { getGen, getRunInfo, url } from '@/utils/api';
 
 export interface Nacre {
   id: string;
@@ -16,9 +31,14 @@ export interface Nacre {
 
 const route = useRoute()
 const runId = Array.isArray(route.params.runId) ? route.params.runId[0] : route.params.runId
-const gens = reactive<{ [gen: number]: Nacre[] }>({})
+const gens = ref<{ [gen: number]: Nacre[] }>({})
 
-const { vf, addGen } = inject(mogaKey) ?? {}
+const { vf, selectedPoints, addGen } = inject(mogaKey) ?? {}
+const selectedData = computed(() => {
+  const grouped = groupBy(selectedPoints?.value, e => Object.keys(gens.value)[e.datasetIndex])
+  return mapValues(grouped, points => (points.map(point => gens.value[Object.keys(gens.value)[point.datasetIndex] as number][point.index]))
+  )
+})
 watchEffect(async () => {
   const volumeFraction = parseFloat(await getRunInfo(runId, 'volume_fraction'))
   const volumeFractionMomentum = parseFloat(await getRunInfo(runId, 'volume_fraction_momentum'))
@@ -31,7 +51,7 @@ watchEffect(async () => {
   while (true) {
     try {
       const gen = await getGen(runId, idx) || []
-      gens[idx] = gen
+      gens.value = { ...gens.value, [idx]: gen }
       if (addGen)
         addGen(idx, { label: idx.toString(), data: gen.map(e => ({ x: e.strength, y: e.toughness })) })
       idx += 10

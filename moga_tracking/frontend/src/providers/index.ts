@@ -1,4 +1,4 @@
-import { InjectionKey, Ref, reactive } from "vue";
+import { InjectionKey, Ref, reactive, ComputedRef } from "vue";
 
 interface ChartDataset {
   label: string;
@@ -7,6 +7,7 @@ interface ChartDataset {
 
 interface MogaProvide {
   vf: Ref<number[]>;
+  selectedPoints: ComputedRef<{ datasetIndex: number; index: number }[]>;
   addGen: (key: number, data: ChartDataset) => {};
 }
 

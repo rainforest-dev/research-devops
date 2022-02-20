@@ -61,14 +61,12 @@ export const getDBItem = async (
   }
 };
 
-export const getGen = async (
-  runId: string,
-  genId: number,
-  num: number = 30
-) => {
+export const getGen = async (runId: string, genId: number, num?: number) => {
   try {
+    const params: { [key: string]: string } = {};
+    if (num) params["num"] = num.toString();
     const res = await fetch(
-      _url(`/mlflow/${runId}/moga/gens/${genId}?num=${num}`)
+      _url(`/mlflow/${runId}/moga/gens/${genId}?`) + new URLSearchParams(params)
     );
     return (await res.json()) as Nacre[];
   } catch (error) {
