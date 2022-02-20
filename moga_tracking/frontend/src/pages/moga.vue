@@ -1,7 +1,7 @@
 <template lang="pug">
-ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
-.card.bg-base-100.shadow-xl.fixed.right-4.bottom-4.h-96.overflow-auto(v-show="selectedPoints.length > 0")
-  .card-body
+.flex.flex-col.full
+  ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
+  .flex-grow.overflow-auto(v-show="selectedPoints.length > 0")
     .collapse.collapse-arrow(tabindex="0")
       input(type="checkbox")
       .collapse-title Dataset
@@ -18,6 +18,8 @@ ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
               .stat
                 .stat-title Toughness
                 .stat-value {{ item.toughness }}
+    .flex.overflow-x-auto.w-full.space-x-2
+      img.w-48.border(v-for="item in datasetSelectedData" :key="item.id" :src="item.preview512")
     router-view
 </template>
 <script setup lang="ts">

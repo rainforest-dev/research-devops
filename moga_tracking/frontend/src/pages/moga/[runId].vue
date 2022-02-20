@@ -1,20 +1,24 @@
 <template lang="pug">
-.collapse.collapse-arrow(v-for="([gen, items]) in Object.entries(selectedData)" :key="gen" :tabindex="gen")
-  input(type="checkbox")
-  .collapse-title {{ gen }}
-  .collapse-content.flex.flex-col.space-y-2
-    .card.card-side(v-for="item in items" :key="item.id")
-      figure.p-2
-        img.w-48(:src="url(`/nacre/${item.id}`)")
-      .card-body
-        .card-title {{ item.id }}
-        .stats
-          .stat
-            .stat-title Strength
-            .stat-value {{ item.strength.toFixed(2) }}
-          .stat
-            .stat-title Toughness
-            .stat-value {{ item.toughness.toFixed(2) }}
+.flex.flex-col-reverse
+  .flex.flex-col(v-for="([gen, items]) in Object.entries(selectedData)" :key="gen")
+    .collapse.collapse-arrow(:tabindex="gen")
+      input(type="checkbox")
+      .collapse-title {{ gen }}
+      .collapse-content.flex.flex-col.space-y-2
+        .card.card-side(v-for="item in items" :key="item.id")
+          figure.p-2
+            img.w-48(:src="url(`/nacre/${item.id}`)")
+          .card-body
+            .card-title {{ item.id }}
+            .stats
+              .stat
+                .stat-title Strength
+                .stat-value {{ item.strength.toFixed(2) }}
+              .stat
+                .stat-title Toughness
+                .stat-value {{ item.toughness.toFixed(2) }}
+    .flex.overflow-x-auto.w-full.space-x-2
+      img.w-48.border(v-for="item in items" :key="item.id" :src="url(`/nacre/${item.id}`)")
 </template>
 <script setup lang="ts">
 import { computed, inject, reactive, ref, watchEffect } from 'vue';
