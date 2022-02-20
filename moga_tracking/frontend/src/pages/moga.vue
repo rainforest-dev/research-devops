@@ -1,5 +1,10 @@
 <template lang="pug">
 .flex.flex-col.full
+  .flex 
+    input.input(v-model="experimentName")
+    select.select(:value="runId" @change="selectRun($event)")
+      option(value="" selected) Select a run
+      option(v-for="item in runs" :key="item.id" :value="item.id") {{ item.id }} ({{ item.status }})
   ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
   .flex-grow.overflow-auto(v-show="selectedPoints.length > 0")
     .collapse.collapse-arrow(tabindex="0")
@@ -24,12 +29,13 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, provide, reactive, ref, toRef, watchEffect } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core';
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import * as chroma from 'chroma.ts'
-import { NacreDB } from '@/types/api';
-import { getDBTable } from '@/utils/api';
+import { NacreDB, Run } from '@/types/api';
+import { getRuns, getDBTable } from '@/utils/api';
 import * as providers from '@/providers';
 import { mogaKey } from '@/providers';
 
@@ -37,15 +43,33 @@ Chart.register(...registerables)
 
 const baseColor = ref<string>('OrRd')
 
+const router = useRouter()
+const route = useRoute()
+const runId = computed(() => Array.isArray(route.params.runId) ? route.params.runId[0] : route.params.runId)
+
 const loading = ref(false)
 const vf = useStorage('vf', [0, 1])
 const dataset = ref<NacreDB[]>([])
+const experimentName = ref<string>('moga(test)')
+const runs = ref<Run[]>([])
 const gens = reactive<{ [key: number]: providers.ChartDataset }>({})
 const gensLength = computed(() => Object.keys(gens).length)
 const colorscheme = computed(() => chroma.scale(baseColor.value).colors(gensLength.value))
 const addGen = (key: number, data: providers.ChartDataset) => {
   gens[key] = data
 }
+const removeGens = () => {
+  Object.keys(gens).forEach(key => { delete gens[key as number] })
+}
+const selectRun = (event: Event) => {
+  const target = event.target as HTMLSelectElement
+  router.push({ path: `/moga/${target.value}` })
+}
+watchEffect(async () => {
+  loading.value = true
+  runs.value = await getRuns(experimentName.value) ?? []
+  loading.value = false
+})
 watchEffect(async () => {
   loading.value = true
   dataset.value = await getDBTable('nacre', ['id', 'ultraStress', 'total_area', 'preview_512'], undefined, vf.value) ?? []
@@ -93,5 +117,10 @@ watchEffect(() => {
   if (dataset && selectedPoints.value.length > 0)
     datasetSelectedData.value = selectedPoints.value.filter((e) => e.datasetIndex === 0).map(e => dataset.value[e.index as number])
 })
-provide(mogaKey, { vf, selectedPoints: computed(() => selectedPoints.value.filter(e => e.datasetIndex !== 0).map(e => ({ datasetIndex: e.datasetIndex as number - 1, index: e.index }))), addGen })
+provide(mogaKey, {
+  vf,
+  selectedPoints: computed(() => selectedPoints.value.filter(e => e.datasetIndex !== 0).map(e => ({ datasetIndex: e.datasetIndex as number - 1, index: e.index }))),
+  addGen,
+  removeGens
+})
 </script>

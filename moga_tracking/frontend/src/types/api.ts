@@ -1,6 +1,15 @@
 import { Expose, Transform } from "class-transformer";
 import { url } from "@/utils/api";
 
+export enum RunStatus {
+  Finished = "FINISHED",
+}
+
+export class Run {
+  id!: string;
+  status!: RunStatus;
+}
+
 export enum RunInfoType {
   Params = "params",
 }

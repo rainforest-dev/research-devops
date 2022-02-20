@@ -21,7 +21,7 @@
       img.w-48.border(v-for="item in items" :key="item.id" :src="url(`/nacre/${item.id}`)")
 </template>
 <script setup lang="ts">
-import { computed, inject, reactive, ref, watchEffect } from 'vue';
+import { computed, inject, onMounted, reactive, ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import { groupBy, mapValues } from 'lodash'
 import { mogaKey } from '@/providers';
@@ -34,27 +34,29 @@ export interface Nacre {
 }
 
 const route = useRoute()
-const runId = Array.isArray(route.params.runId) ? route.params.runId[0] : route.params.runId
+const runId = computed(() => Array.isArray(route.params.runId) ? route.params.runId[0] : route.params.runId)
 const gens = ref<{ [gen: number]: Nacre[] }>({})
 
-const { vf, selectedPoints, addGen } = inject(mogaKey) ?? {}
+const { vf, selectedPoints, addGen, removeGens } = inject(mogaKey) ?? {}
 const selectedData = computed(() => {
   const grouped = groupBy(selectedPoints?.value, e => Object.keys(gens.value)[e.datasetIndex])
   return mapValues(grouped, points => (points.map(point => gens.value[Object.keys(gens.value)[point.datasetIndex] as number][point.index]))
   )
 })
 watchEffect(async () => {
-  const volumeFraction = parseFloat(await getRunInfo(runId, 'volume_fraction'))
-  const volumeFractionMomentum = parseFloat(await getRunInfo(runId, 'volume_fraction_momentum'))
+  const volumeFraction = parseFloat(await getRunInfo(runId.value, 'volume_fraction'))
+  const volumeFractionMomentum = parseFloat(await getRunInfo(runId.value, 'volume_fraction_momentum'))
   if (vf) {
     vf.value = [volumeFraction - volumeFractionMomentum, volumeFraction + volumeFractionMomentum]
   }
 })
 watchEffect(async () => {
   var idx = 10
+  const id = runId.value
   while (true) {
+    if (id !== runId.value) break
     try {
-      const gen = await getGen(runId, idx) || []
+      const gen = await getGen(runId.value, idx) || []
       gens.value = { ...gens.value, [idx]: gen }
       if (addGen)
         addGen(idx, { label: idx.toString(), data: gen.map(e => ({ x: e.strength, y: e.toughness })) })
@@ -64,5 +66,10 @@ watchEffect(async () => {
       break
     }
   }
+})
+watch(() => runId.value, () => {
+  // reset gens when run id is changed
+  gens.value = {}
+  removeGens && removeGens()
 })
 </script>

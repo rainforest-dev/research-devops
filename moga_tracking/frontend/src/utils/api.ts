@@ -1,9 +1,18 @@
-import { RunInfoType, NacreDB, Nacre } from "@/types/api";
+import { RunInfoType, NacreDB, Nacre, Run } from "@/types/api";
 import { plainToClass } from "class-transformer";
 
 const _url = (url: string) => `${import.meta.env.VITE_API_ENDPOINT}${url}`;
 
 export const url = _url;
+
+export const getRuns = async (experimentName: string) => {
+  try {
+    const res = await fetch(_url(`/mlflow/${experimentName}`));
+    return (await res.json()) as Array<Run>;
+  } catch (error) {
+    console.warn(error);
+  }
+};
 
 export const getRunInfo = async (
   runId: string,
