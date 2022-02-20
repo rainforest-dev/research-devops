@@ -33,18 +33,24 @@
 		"streetsidesoftware.code-spell-checker",
 		"ms-azuretools.vscode-docker",
 		"eamodio.gitlens",
-		// frontend
 		"Wscats.vue",
 		"johnsoncodehk.volar",
 		"bradlc.vscode-tailwindcss",
 		"heybourn.headwind",
 		"antfu.vite",
-		// backend
 		"ms-python.python",
 		"ms-python.vscode-pylance",
 		"KevinRose.vsc-python-indent",
 		"njpwerner.autodocstring",
-		"donjayamanne.python-environment-manager"
+		"donjayamanne.python-environment-manager",
+		"humao.rest-client",
+		"mhutchie.git-graph",
+		"formulahendry.auto-rename-tag",
+		"formulahendry.auto-close-tag",
+		"steoates.autoimport",
+		"christian-kohler.path-intellisense",
+		"mikestead.dotenv",
+		"ms-edgedevtools.vscode-edge-devtools"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

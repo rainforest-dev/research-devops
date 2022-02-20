@@ -1,7 +1,19 @@
-import { RunInfoType, NacreDB, Nacre } from "@/types/api";
+import { RunInfoType, NacreDB, Nacre, Run } from "@/types/api";
 import { plainToClass } from "class-transformer";
 
-const _url = (url: string) => `${import.meta.env.VITE_API_ENDPOINT}${url}`;
+const _url = (url: string) =>
+  `${import.meta.env.VITE_API_ENDPOINT ?? ""}${url}`;
+
+export const url = _url;
+
+export const getRuns = async (experimentName: string) => {
+  try {
+    const res = await fetch(_url(`/mlflow/${experimentName}`));
+    return (await res.json()) as Array<Run>;
+  } catch (error) {
+    console.warn(error);
+  }
+};
 
 export const getRunInfo = async (
   runId: string,
@@ -19,16 +31,17 @@ export const getRunInfo = async (
 export const getDBTable = async (
   table: string,
   fields: string[],
+  num?: number,
   volumeFraction: number[] = [0, 1],
-  num: number = 300
+  totalArea: number = 0.25
 ) => {
   try {
     const params: { [key: string]: string } = {
       fields: fields.join("-"),
-      num: num.toString(),
     };
-    if (volumeFraction.length > 0)
-      params["vf"] = volumeFraction.map((e) => (e ? e : "")).join("-");
+    if (num) params["num"] = num.toString();
+    if (volumeFraction.length > 0) params["vf"] = volumeFraction.join("-");
+    if (totalArea) params["total_area"] = totalArea.toString();
     const res = await fetch(
       _url(`/db/${table}?`) + new URLSearchParams(params)
     );
@@ -40,17 +53,33 @@ export const getDBTable = async (
   }
 };
 
-export const getGen = async (
-  runId: string,
-  genId: number,
-  num: number = 30
+export const getDBItem = async (
+  table: string,
+  id: string,
+  fields: string[]
 ) => {
   try {
+    const params: { [key: string]: string } = {
+      fields: fields.join("-"),
+    };
     const res = await fetch(
-      _url(`/mlflow/${runId}/moga/gens/${genId}?num=${num}`)
+      _url(`/db/${table}/${id}?`) + new URLSearchParams(params)
+    );
+    return plainToClass(NacreDB, await res.json());
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const getGen = async (runId: string, genId: number, num?: number) => {
+  try {
+    const params: { [key: string]: string } = {};
+    if (num) params["num"] = num.toString();
+    const res = await fetch(
+      _url(`/mlflow/${runId}/moga/gens/${genId}?`) + new URLSearchParams(params)
     );
     return (await res.json()) as Nacre[];
   } catch (error) {
-    console.warn(error);
+    throw error;
   }
 };

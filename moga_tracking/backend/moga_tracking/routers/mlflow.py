@@ -18,9 +18,22 @@ router = APIRouter(prefix='/mlflow', tags=["mlflow"])
 client = MlflowClient()
 
 
+@router.get('/{experiment_name}')
+def experiment_runs(experiment_name: str):
+  experiment = dict(client.get_experiment_by_name(experiment_name))
+  experiment_id = experiment['experiment_id']
+  runs = client.search_runs([experiment_id])
+  return [{
+      'id': run.info.run_id,
+      'status': run.info.status
+  } for run in filter(lambda run: run.info.lifecycle_stage == "active", runs)]
+
+
 @router.get('/{run_id}/{info_type}')
 @router.get('/{run_id}/{info_type}/{info_key}')
-def run_info(run_id: str, info_type: MlflowRunInfoType, info_key: Optional[str] = Query(None)):
+def run_info(run_id: str,
+             info_type: MlflowRunInfoType,
+             info_key: Optional[str] = Query(None)):
   run = client.get_run(run_id=run_id)
   if info_type == MlflowRunInfoType.PARAMS:
     return run.data.params.get(info_key, run.data.params)
@@ -33,11 +46,14 @@ def transform(item: dict):
 
 @router.get('/{run_id}/moga/gens/')
 @router.get('/{run_id}/moga/gens/{gen_id}')
-def moga_gens(run_id: str, gen_id: Optional[int] = Query(None), num: Optional[int] = Query(None)):
-  local_path = download_artifacts(run_id=run_id,
-                                  remote_path='gens',
-                                  local_path=os.getenv('TMP', 'tmp'),
-                                  client=client)
+def moga_gens(run_id: str,
+              gen_id: Optional[int] = Query(None),
+              num: Optional[int] = Query(None)):
+  local_path = download_artifacts(
+      run_id=run_id,
+      remote_path='gens',
+      local_path=f"{os.getenv('TMP', 'tmp')}/{run_id}",
+      client=client)
   if gen_id is not None:
     result = yaml.load(open(f'{local_path}/gen_{gen_id}.yml'), yaml.Loader)
     result = [transform(item) for item in result.values()]

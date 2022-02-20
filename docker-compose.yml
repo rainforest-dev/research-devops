@@ -1,15 +1,9 @@
 version: '3'
 services:
   mlflow_model_serve:
-    build:
-      context: ./mlflow_model_serve
-      dockerfile: Dockerfile
+    image: ghcr.io/r08521610/research-devops:mlflow_model_serve
     volumes:
-      - ~/.aws:~/.aws
-      - .env:.env
-    secrets:
-      - GIT_ACCESS_TOKEN
-
-secrets:
-  GIT_ACCESS_TOKEN:
-    external: true
+      - $HOME/.aws:/root/.aws
+      - ${PWD}/mlflow_model_serve/.env:/app/.env
+    ports:
+      - "8000:8000"
