@@ -46,7 +46,7 @@ const selectedData = computed(() => {
 watchEffect(async () => {
   const volumeFraction = parseFloat(await getRunInfo(runId.value, 'volume_fraction'))
   const volumeFractionMomentum = parseFloat(await getRunInfo(runId.value, 'volume_fraction_momentum'))
-  if (vf) {
+  if (vf && volumeFraction && volumeFractionMomentum) {
     vf.value = [volumeFraction - volumeFractionMomentum, volumeFraction + volumeFractionMomentum]
   }
 })

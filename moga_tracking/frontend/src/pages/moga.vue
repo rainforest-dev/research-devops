@@ -1,9 +1,11 @@
 <template lang="pug">
 .flex.flex-col.full
   .flex.items-center.space-x-2.p-2
+    router-link.btn.btn-outline(to="/moga" class="hover:btn-circle")
+      HomeIcon.h-5.w-5
     input.input.input-bordered(v-model="experimentName")
     select.select.select-bordered(:value="runId" @change="selectRun($event)")
-      option(value="" selected) Select a run
+      option(value="" selected disabled) Select a run
       option(v-for="item in runs" :key="item.id" :value="item.id") {{ item.id }} ({{ item.status }})
     span {{ vf[0].toFixed(2) }} - {{ vf[1].toFixed(2) }}
     button.btn.btn-outline(@click="exportChart")
@@ -34,7 +36,7 @@
 import { computed, onMounted, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core';
-import { ShareIcon } from '@heroicons/vue/solid'
+import { ShareIcon, HomeIcon } from '@heroicons/vue/solid'
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import * as chroma from 'chroma.ts'
