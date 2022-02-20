@@ -1,10 +1,13 @@
 <template lang="pug">
 .flex.flex-col.full
-  .flex 
-    input.input(v-model="experimentName")
-    select.select(:value="runId" @change="selectRun($event)")
+  .flex.items-center.space-x-2.p-2
+    input.input.input-bordered(v-model="experimentName")
+    select.select.select-bordered(:value="runId" @change="selectRun($event)")
       option(value="" selected) Select a run
       option(v-for="item in runs" :key="item.id" :value="item.id") {{ item.id }} ({{ item.status }})
+    span {{ vf[0].toFixed(2) }} - {{ vf[1].toFixed(2) }}
+    button.btn.btn-outline(@click="exportChart")
+      ShareIcon.h-5.w-5
   ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
   .flex-grow.overflow-auto(v-show="selectedPoints.length > 0")
     .collapse.collapse-arrow(tabindex="0")
@@ -31,6 +34,7 @@
 import { computed, onMounted, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core';
+import { ShareIcon } from '@heroicons/vue/solid'
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import * as chroma from 'chroma.ts'
@@ -41,6 +45,7 @@ import { mogaKey } from '@/providers';
 
 Chart.register(...registerables)
 
+// https://www.npmjs.com/package/chroma.ts
 const baseColor = ref<string>('OrRd')
 
 const router = useRouter()
@@ -117,6 +122,13 @@ watchEffect(() => {
   if (dataset && selectedPoints.value.length > 0)
     datasetSelectedData.value = selectedPoints.value.filter((e) => e.datasetIndex === 0).map(e => dataset.value[e.index as number])
 })
+const exportChart = () => {
+  const dataImage = scatterRef.value.chartInstance.toBase64Image()
+  const a = document.createElement("a")
+  a.href = dataImage
+  a.download = `${runId.value ?? 'dataset_vf_' + vf.value.join('-')}.png`
+  a.click()
+}
 provide(mogaKey, {
   vf,
   selectedPoints: computed(() => selectedPoints.value.filter(e => e.datasetIndex !== 0).map(e => ({ datasetIndex: e.datasetIndex as number - 1, index: e.index }))),
