@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import layouts from "vite-plugin-vue-layouts";
 import pages from "vite-plugin-pages";
 import * as path from "path";
 
@@ -11,5 +12,5 @@ export default defineConfig({
     },
   },
   server: { port: 4000 },
-  plugins: [vue(), pages()],
+  plugins: [vue(), pages(), layouts()],
 });
