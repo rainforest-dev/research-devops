@@ -20,7 +20,7 @@ async def nacre_image(background_tasks: BackgroundTasks,
                       img_size: Optional[int] = 512,
                       format: str = 'jpg',
                       unit_cell: bool = False):
-    """return nacre image
+  """return nacre image
 
     Args:
         background_tasks (BackgroundTasks):
@@ -29,21 +29,24 @@ async def nacre_image(background_tasks: BackgroundTasks,
         format (str, optional): Defaults to 'jpg'.
         unit_cell (bool, optional): Defaults to False.
     """
-    params = [int(item) for item in params.split('_')]
-    img = paramsToImg(params=params, is_unit_cell=unit_cell,
-                      chromosome_length=img_size)
-    filename = f'{"".join(str(item) for item in params)}'
-    # [reference](https://stackoverflow.com/a/64717120)
-    _, path = tempfile.mkstemp(suffix=f'.{format}')
-    if format == 'jpg' or format == 'png':
-        img = Image.fromarray(img * 255)
-        img.save(path)
-    elif format == 'npy':
-        # !currently broken
-        np.save(path, img)
+  params = [int(item) for item in params.split('_')]
+  img = paramsToImg(params=params,
+                    is_unit_cell=unit_cell,
+                    chromosome_length=img_size)
+  filename = f'{"_".join(str(item) for item in params)}'
+  # [reference](https://stackoverflow.com/a/64717120)
+  _, path = tempfile.mkstemp(suffix=f'.{format}')
+  if format == 'jpg' or format == 'png':
+    img = Image.fromarray(img * 255)
+    img.save(path)
+  elif format == 'npy':
+    np.save(path, img)
 
-    background_tasks.add_task(os.unlink, path)
-    return FileResponse(path=path, filename=f'{filename}.{format}')
+  background_tasks.add_task(os.unlink, path)
+  return FileResponse(
+      path=path,
+      filename=f'{filename}.{format}',
+      media_type="application/x-binary" if format == 'npy' else None)
 
 
 # @router.get('/design_space/')
