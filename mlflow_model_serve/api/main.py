@@ -14,7 +14,7 @@ from research.data_preprocessing.transforms import TorchScaler
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(title='MLflow Model Serve')
 client = MlflowClient()
 models = {}
 

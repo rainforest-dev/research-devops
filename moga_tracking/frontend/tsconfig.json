@@ -21,7 +21,9 @@
       "dom"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "vite-plugin-vue-layouts/client",
+      "vite-plugin-pages/client"
     ],
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true
