@@ -17,6 +17,8 @@
               .stat
                 .stat-title Toughness
                 .stat-value {{ item.toughness.toFixed(2) }}
+            .card-actions
+              a.btn(:href="url(`/nacre/${item.id}?format=npy`)" target="_blank" download) .npy
     .flex.overflow-x-auto.w-full.space-x-2
       img.w-48.border(v-for="item in items" :key="item.id" :src="url(`/nacre/${item.id}`)")
 </template>
