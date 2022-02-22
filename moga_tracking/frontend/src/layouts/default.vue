@@ -21,6 +21,7 @@
         DatabaseIcon.w-5.h-5.ml-1
       router-link.btn.btn-ghost(to="/moga") MOGA
         BeakerIcon.w-5.h-5.ml-1
+      ThemeSelect
   .flex-grow.full.overflow-auto
     router-view
 </template>
@@ -28,4 +29,5 @@
 import { ExternalLinkIcon, DocumentTextIcon, CubeTransparentIcon, DatabaseIcon, BeakerIcon } from "@heroicons/vue/solid"
 import { url } from "@/utils/api"
 import Spotlight from "./spotlight.vue";
+import ThemeSelect from "./themeSelect.vue";
 </script>

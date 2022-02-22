@@ -5,6 +5,7 @@
     "moga",
     "postcss",
     "starlette",
-    "VITE"
+    "VITE",
+    "vueuse"
   ]
 }
