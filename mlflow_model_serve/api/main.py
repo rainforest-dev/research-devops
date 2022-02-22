@@ -2,6 +2,7 @@ import os
 from typing import List
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile, Form, Request
+from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 from mlflow.tracking import MlflowClient
 from mlflow.pytorch import load_model
@@ -15,6 +16,14 @@ from research.data_preprocessing.transforms import TorchScaler
 load_dotenv()
 
 app = FastAPI(title='MLflow Model Serve')
+
+origins = ["*"]
+app.add_middleware(CORSMiddleware,
+                   allow_origins=origins,
+                   allow_credentials=True,
+                   allow_methods=["*"],
+                   allow_headers=["*"])
+
 client = MlflowClient()
 models = {}
 

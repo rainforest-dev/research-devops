@@ -28,6 +28,8 @@
               .stat
                 .stat-title Toughness
                 .stat-value {{ item.toughness }}
+            .card-actions
+              a.btn(:href="item.raw512" target="_blank" download) .npy
     .flex.overflow-x-auto.w-full.space-x-2
       img.w-48.border(v-for="item in datasetSelectedData" :key="item.id" :src="item.preview512")
     router-view
@@ -79,7 +81,7 @@ watchEffect(async () => {
 })
 watchEffect(async () => {
   loading.value = true
-  dataset.value = await getDBTable('nacre', ['id', 'ultraStress', 'total_area', 'preview_512'], undefined, vf.value) ?? []
+  dataset.value = await getDBTable('nacre', ['id', 'ultraStress', 'total_area', 'preview_512', 'raw_512'], undefined, vf.value) ?? []
   loading.value = false
 })
 const scatterRef = ref()
