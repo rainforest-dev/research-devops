@@ -1,5 +1,5 @@
 <template lang="pug">
-.dropdown.dropdown-end
+.dropdown.dropdown-end.space-y-2
   label.btn.btn-ghost.flex-nowrap(tabindex="0") {{ theme }}
     ColorSwatchIcon.w-5.h-5.ml-1
   ul.dropdown-content.bg-base-100.menu.rounded-box.shadow.max-h-96.overflow-auto.uppercase(tabindex="0")
