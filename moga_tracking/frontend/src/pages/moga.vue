@@ -1,7 +1,7 @@
 <template lang="pug">
 .flex.flex-col.full
   .flex.items-center.space-x-2.p-2
-    router-link.btn.btn-outline(to="/moga" class="hover:btn-circle")
+    router-link(to="/moga" class="btn btn-outline hover:btn-circle")
       HomeIcon.h-5.w-5
     input.input.input-bordered(v-model="experimentName")
     select.select.select-bordered(:value="runId" @change="selectRun($event)")
@@ -68,7 +68,7 @@ const addGen = (key: number, data: providers.ChartDataset) => {
   gens[key] = data
 }
 const removeGens = () => {
-  Object.keys(gens).forEach(key => { delete gens[key as number] })
+  Object.keys(gens).forEach(key => { delete gens[key as unknown as number] })
 }
 const selectRun = (event: Event) => {
   const target = event.target as HTMLSelectElement

@@ -4,6 +4,7 @@
     .navbar-start
       router-link.btn.btn-ghost(to="/") Research DevOps
     .navbar-end
+      Spotlight
       a.btn.btn-ghost(href="http://rainforest80256.synology.me/" target="_blank") MLflow
         ExternalLinkIcon.w-5.h-5.ml-1
       .dropdown
@@ -26,4 +27,5 @@
 <script setup lang="ts">
 import { ExternalLinkIcon, DocumentTextIcon, CubeTransparentIcon, DatabaseIcon, BeakerIcon } from "@heroicons/vue/solid"
 import { url } from "@/utils/api"
+import Spotlight from "./spotlight.vue";
 </script>

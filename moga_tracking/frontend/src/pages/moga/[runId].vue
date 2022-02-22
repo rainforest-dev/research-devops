@@ -18,7 +18,7 @@
                 .stat-title Toughness
                 .stat-value {{ item.toughness.toFixed(2) }}
             .card-actions
-              a.btn(:href="url(`/nacre/${item.id}?format=npy`)" target="_blank" download) .npy
+              a.btn(:href="url(`/nacre/${item.id}?format=npy`)" target="_blank" download draggable="true") .npy
     .flex.overflow-x-auto.w-full.space-x-2
       img.w-48.border(v-for="item in items" :key="item.id" :src="url(`/nacre/${item.id}`)")
 </template>
@@ -42,7 +42,7 @@ const gens = ref<{ [gen: number]: Nacre[] }>({})
 const { vf, selectedPoints, addGen, removeGens } = inject(mogaKey) ?? {}
 const selectedData = computed(() => {
   const grouped = groupBy(selectedPoints?.value, e => Object.keys(gens.value)[e.datasetIndex])
-  return mapValues(grouped, points => (points.map(point => gens.value[Object.keys(gens.value)[point.datasetIndex] as number][point.index]))
+  return mapValues(grouped, points => (points.map(point => gens.value[Object.keys(gens.value)[point.datasetIndex] as unknown as number][point.index]))
   )
 })
 watchEffect(async () => {
