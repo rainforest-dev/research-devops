@@ -81,7 +81,7 @@ watch(file, async () => {
   if (file.value) {
     let res = await strength(file.value)
     if (res && res.length) data.strength = { ...data.strength, inverse: res[0] }
-    res = await toughness(file.value, false)
+    res = await strength(file.value, false)
     if (res && res.length) data.strength = { ...data.strength, value: res[0] }
   }
 })

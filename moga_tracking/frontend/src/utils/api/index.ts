@@ -9,7 +9,8 @@ export const url = _url;
 export const getRuns = async (experimentName: string) => {
   try {
     const res = await fetch(_url(`/mlflow/${experimentName}`));
-    return (await res.json()) as Array<Run>;
+    const data = (await res.json()) as Array<Record<string, any>>;
+    return data.map((e) => plainToClass(Run, e));
   } catch (error) {
     console.warn(error);
   }

@@ -8,6 +8,12 @@ export enum RunStatus {
 export class Run {
   id!: string;
   status!: RunStatus;
+  @Expose({ name: "start_time" })
+  @Transform(({ value }) => new Date(value))
+  startAt!: Date;
+  @Transform(({ value }) => new Date(value))
+  @Expose({ name: "end_time" })
+  endAt!: Date;
 }
 
 export enum RunInfoType {

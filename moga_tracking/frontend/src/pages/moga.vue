@@ -4,10 +4,27 @@
     router-link(to="/moga" class="btn btn-outline hover:btn-circle")
       HomeIcon.h-5.w-5
     input.input.input-bordered(v-model="experimentName")
-    select.select.select-bordered(:value="runId" @change="selectRun($event)")
-      option(value="" selected disabled) Select a run
-      option(v-for="item in runs" :key="item.id" :value="item.id") {{ item.id }} ({{ item.status }})
-    span {{ vf[0].toFixed(2) }} - {{ vf[1].toFixed(2) }}
+    .dropdown
+      .flex.space-x-2(@click.stop @click.prevent)
+        button.btn.btn-outline(@click="(e) => { favorite(runId) }" @click.stop @click.prevent)
+          StarIcon.w-6.h-6.text-yellow-500(v-if="favorites.includes(runId)")
+          StarOutlineIcon.w-6.h-6(v-else)
+        label.btn.btn-outline(tabindex="0") 
+          span {{ runId ?? "Select a run" }}
+      ul.dropdown-content.bg-base-100.rounded-box.shadow.menu.mt-4.max-h-96.overflow-auto(tabindex="0")
+        li(v-for="item in runs" :key="item.id" :value="item.id") 
+          router-link.flex.justify-between(:to="`/moga/${item.id}`")
+            button.btn.btn-ghost(@click="(e) => { favorite(item.id) }" @click.stop @click.prevent)
+              StarIcon.w-6.h-6.text-yellow-500(v-if="favorites.includes(item.id)")
+              StarOutlineIcon.w-6.h-6(v-else)
+            .flex.flex-col
+              span {{ item.id }}
+              span.text-xs {{ format(item.startAt, dateFormat) }} - {{ format(item.endAt, dateFormat) }}
+            span.badge.badge-success {{ item.status }}
+    //- select.select.select-bordered(:value="runId" @change="selectRun($event)")
+    //-   option(value="" selected disabled) Select a run
+    //-   option(v-for="item in runs" :key="item.id" :value="item.id") {{ item.id }} ({{ item.status }})
+    span {{ vf[0].toFixed(2) }} ~ {{ vf[1].toFixed(2) }}
     button.btn.btn-outline(@click="exportChart")
       ShareIcon.h-5.w-5
   ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
@@ -37,16 +54,19 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStorage } from '@vueuse/core';
-import { ShareIcon, HomeIcon } from '@heroicons/vue/solid'
+import { useLocalStorage, useStorage } from '@vueuse/core';
+import { ShareIcon, HomeIcon, StarIcon } from '@heroicons/vue/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/outline'
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import * as chroma from 'chroma.ts'
+import { format } from "date-fns"
 import { NacreDB, Run } from '@/types/api';
 import { getRuns, getDBTable } from '@/utils/api';
 import * as providers from '@/providers';
 import { mogaKey } from '@/providers';
 
+const dateFormat = "yyyy-MM-dd HH:mm"
 Chart.register(...registerables)
 
 // https://www.npmjs.com/package/chroma.ts
@@ -61,6 +81,13 @@ const vf = useStorage('vf', [0, 1])
 const dataset = ref<NacreDB[]>([])
 const experimentName = ref<string>('moga(test)')
 const runs = ref<Run[]>([])
+const favorites = useLocalStorage<string[]>('favorites', [])
+const favorite = (runId: string) => {
+  if (favorites.value.includes(runId))
+    favorites.value = favorites.value.filter(e => e !== runId)
+  else
+    favorites.value = [...favorites.value, runId]
+}
 const gens = reactive<{ [key: number]: providers.ChartDataset }>({})
 const gensLength = computed(() => Object.keys(gens).length)
 const colorscheme = computed(() => chroma.scale(baseColor.value).colors(gensLength.value))
