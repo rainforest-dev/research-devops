@@ -12,14 +12,15 @@
         label.btn.btn-outline(tabindex="0") 
           span {{ runId ?? "Select a run" }}
       ul.dropdown-content.bg-base-100.rounded-box.shadow.menu.mt-4.max-h-96.overflow-auto(tabindex="0")
-        li(v-for="item in runs" :key="item.id" :value="item.id") 
+        li(v-for="item in runs" :key="item.id" :class="[item.id === runId && 'bg-primary text-primary-content']") 
           router-link.flex.justify-between(:to="`/moga/${item.id}`")
-            button.btn.btn-ghost(@click="(e) => { favorite(item.id) }" @click.stop @click.prevent)
-              StarIcon.w-6.h-6.text-yellow-500(v-if="favorites.includes(item.id)")
-              StarOutlineIcon.w-6.h-6(v-else)
-            .flex.flex-col
-              span {{ item.id }}
-              span.text-xs {{ format(item.startAt, dateFormat) }} - {{ format(item.endAt, dateFormat) }}
+            .flex.space-x-2
+              button.btn.btn-ghost(@click="(e) => { favorite(item.id) }" @click.stop @click.prevent)
+                StarIcon.w-6.h-6.text-yellow-500(v-if="favorites.includes(item.id)")
+                StarOutlineIcon.w-6.h-6(v-else)
+              .flex.flex-col.justify-start
+                span {{ item.id }}
+                span.text-xs {{ format(item.startAt, dateFormat) }} - {{ format(item.endAt, dateFormat) }}
             span.badge.badge-success {{ item.status }}
     //- select.select.select-bordered(:value="runId" @change="selectRun($event)")
     //-   option(value="" selected disabled) Select a run
@@ -27,6 +28,9 @@
     span {{ vf[0].toFixed(2) }} ~ {{ vf[1].toFixed(2) }}
     button.btn.btn-outline(@click="exportChart")
       ShareIcon.h-5.w-5
+    .flex-grow
+    button.btn.btn-outline.btn-error(@click="() => runId && deleteRun(runId)")
+      TrashIcon.h-5.w-5
   ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
   .flex-grow.overflow-auto(v-show="selectedPoints.length > 0")
     .collapse.collapse-arrow(tabindex="0")
@@ -55,14 +59,14 @@
 import { computed, onMounted, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useLocalStorage, useStorage } from '@vueuse/core';
-import { ShareIcon, HomeIcon, StarIcon } from '@heroicons/vue/solid'
+import { ShareIcon, HomeIcon, StarIcon, TrashIcon } from '@heroicons/vue/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/outline'
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import * as chroma from 'chroma.ts'
 import { format } from "date-fns"
 import { NacreDB, Run } from '@/types/api';
-import { getRuns, getDBTable } from '@/utils/api';
+import { getRuns, getDBTable, deleteRun } from '@/utils/api';
 import * as providers from '@/providers';
 import { mogaKey } from '@/providers';
 

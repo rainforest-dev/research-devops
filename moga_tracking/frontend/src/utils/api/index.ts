@@ -29,6 +29,16 @@ export const getRunInfo = async (
   }
 };
 
+export const deleteRun = async (runId: string) => {
+  try {
+    await fetch(_url(`/mlflow/${runId}`), {
+      method: "DELETE",
+    });
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
 export const getDBTable = async (
   table: string,
   fields: string[],

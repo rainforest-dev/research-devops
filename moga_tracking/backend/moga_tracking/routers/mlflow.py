@@ -90,6 +90,11 @@ def transform(item: dict):
   return item
 
 
+@router.delete('/{run_id}')
+def delete_run(run_id: str):
+  client.delete_run(run_id=run_id)
+
+
 @router.get('/{run_id}/moga/gens/')
 @router.get('/{run_id}/moga/gens/{gen_id}')
 def moga_gens(run_id: str,
