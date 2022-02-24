@@ -40,18 +40,20 @@
     .card-actions
       button.btn.btn-sm.rounded-full(@click="clear") Clear
 
-  figure
-    img.full.object-cover(:src="url", :alt="url")
+  figure.relative
+    img.full.object-cover(ref="imageRef" :src="url", :alt="url")
+    .border-4.border-primary.absolute.top-0.left-0(:style="unitCellStyle" class="bg-primary/10")
 </template>
 <script setup lang="ts">
-import { computed, defineComponent, reactive, ref } from "vue";
-import Slider from '@vueform/slider'
+import { computed, defineComponent, reactive, ref, watch } from "vue";
+import { useElementSize } from "@vueuse/core";
+import Slider from "@vueform/slider";
 import * as form from "@/types/form";
-import * as nacre from "@/types/nacre"
+import * as nacre from "@/types/nacre";
 
 const a = typeof defineComponent;
 
-const sizeOptions = [32, 64, 128]
+const sizeOptions = [32, 64, 128];
 
 const designSpaces: form.Field<nacre.Field>[] = [
   { name: "s1", type: form.FieldType.Boolean },
@@ -68,13 +70,13 @@ const designSpaces: form.Field<nacre.Field>[] = [
 const defaultParams: { [key in nacre.Field]: boolean | number | string } = {
   s1: 1,
   s2: 0,
-  s3: 1,
-  s4: 0,
+  s3: 0,
+  s4: 1,
   s5: 1,
   s6: 1,
   s7: 0,
   s8: 0,
-  s9: 0,
+  s9: 1,
   Ha: 28,
   Hb: 29,
   Hc: 71,
@@ -83,7 +85,10 @@ const defaultParams: { [key in nacre.Field]: boolean | number | string } = {
   Lc: 59,
 };
 
-const _defaultValue = (field: form.Field<nacre.Field>, params = defaultParams) => {
+const _defaultValue = (
+  field: form.Field<nacre.Field>,
+  params = defaultParams
+) => {
   const value = params[field.name];
   switch (field.type) {
     case form.FieldType.Boolean:
@@ -104,18 +109,29 @@ var S = reactive<{ [key: string]: boolean | number | string }>(
     {}
   )
 );
-const height = ref<number>(sizeOptions[0])
-const length = ref<number>(sizeOptions[0])
+const height = ref<number>(sizeOptions[2]);
+const length = ref<number>(sizeOptions[2]);
 
-const hSlider = ref<number[]>([16, 24])
-const lSlider = ref<number[]>([16, 24])
+const imageRef = ref(null);
+const { width: w, height: h } = useElementSize(imageRef);
+const unitCellStyle = computed(() => ({
+  height: (h.value * height.value) / 512 + "px",
+  width: (w.value * length.value) / 512 + "px",
+}));
+
+const hSlider = ref<number[]>([32, 96]);
+const lSlider = ref<number[]>([32, 96]);
 
 const H = computed(() => [
-  hSlider.value[0], hSlider.value[1] - hSlider.value[0], height.value - hSlider.value[1]
-])
+  hSlider.value[0],
+  hSlider.value[1] - hSlider.value[0],
+  height.value - hSlider.value[1],
+]);
 const L = computed(() => [
-  lSlider.value[0], lSlider.value[1] - lSlider.value[0], length.value - lSlider.value[1]
-])
+  lSlider.value[0],
+  lSlider.value[1] - lSlider.value[0],
+  length.value - lSlider.value[1],
+]);
 
 const onChange = (designSpace: form.Field, e: Event) => {
   const target = <HTMLInputElement>e.target;
@@ -134,7 +150,11 @@ const onChange = (designSpace: form.Field, e: Event) => {
 
 const url = computed(() => {
   // "http://localhost:3000/nacre/1_0_1_0_1_1_0_0_0_28_29_71_33_36_59?img_size=512&format=jpg&unit_cell=false"
-  const _params = [...Object.values(S).map((e) => Number(e)), ...H.value, ...L.value];
+  const _params = [
+    ...Object.values(S).map((e) => Number(e)),
+    ...H.value,
+    ...L.value,
+  ];
   const paramsPart = _params.join("_");
   return `http://localhost:3000/nacre/${paramsPart}`;
 });

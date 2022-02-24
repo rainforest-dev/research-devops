@@ -1,6 +1,6 @@
 <template lang="pug">
 .flex.flex-col.full
-  .navbar
+  .navbar(v-if="!fullscreen")
     .navbar-start
       router-link.btn.btn-ghost(to="/") Research DevOps
     .navbar-end
@@ -26,8 +26,12 @@
     router-view
 </template>
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router"
 import { ExternalLinkIcon, DocumentTextIcon, CubeTransparentIcon, DatabaseIcon, BeakerIcon } from "@heroicons/vue/solid"
 import { url } from "@/utils/api"
 import Spotlight from "./spotlight.vue";
 import ThemeSelect from "./themeSelect.vue";
+const route = useRoute()
+const fullscreen = computed(() => route.query.fullscreen === 'true')
 </script>
