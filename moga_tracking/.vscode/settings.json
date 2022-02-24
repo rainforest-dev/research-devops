@@ -1,6 +1,12 @@
 {
   "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
   "cSpell.words": [
-    "starlette"
+    "heroicons",
+    "mlflow",
+    "moga",
+    "postcss",
+    "starlette",
+    "VITE",
+    "vueuse"
   ]
 }

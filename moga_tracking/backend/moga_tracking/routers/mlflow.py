@@ -20,12 +20,58 @@ client = MlflowClient()
 
 @router.get('/{experiment_name}')
 def experiment_runs(experiment_name: str):
+  """_summary_
+  <Run: 
+    data=<RunData: 
+      metrics={
+        'loss_strength': -120.59356719970702,
+        'loss_strength_max': -18.432790756225586,
+        'loss_strength_min': -139.7435302734375,
+        'loss_toughness': -0.06870851915329695,
+        'loss_toughness_max': -0.0351351797580719,
+        'loss_toughness_min': -0.2052285373210907
+      },
+      params={
+        'n_gen': '200',
+        'n_offsprings': 'None',
+        'pop_size': '100',
+        'volume_fraction': '0.5',
+        'volume_fraction_momentum': '0.49'
+      }, 
+      tags={
+        'mlflow.source.git.commit': 'f213328abdd404f593cec0f53979b5abd2303531',
+        'mlflow.source.name': 'research_moga',
+        'mlflow.source.type': 'LOCAL',
+        'mlflow.user': 'rainforest'
+      }
+      >, 
+    info=<RunInfo: 
+      artifact_uri='s3://mlflow/6/c4142ebd3a4d4d9994b71c3d9446bb16/artifacts', 
+      end_time=1639877271438, 
+      experiment_id='6', 
+      lifecycle_stage='active', 
+      run_id='c4142ebd3a4d4d9994b71c3d9446bb16', 
+      run_uuid='c4142ebd3a4d4d9994b71c3d9446bb16', 
+      start_time=1639846593969, 
+      status='FINISHED', 
+      user_id='rainforest'
+    >
+  >
+
+  Args:
+      experiment_name (str): _description_
+
+  Returns:
+      _type_: _description_
+  """
   experiment = dict(client.get_experiment_by_name(experiment_name))
   experiment_id = experiment['experiment_id']
   runs = client.search_runs([experiment_id])
   return [{
       'id': run.info.run_id,
-      'status': run.info.status
+      'status': run.info.status,
+      'start_time': run.info.start_time,
+      'end_time': run.info.end_time,
   } for run in filter(lambda run: run.info.lifecycle_stage == "active", runs)]
 
 
@@ -42,6 +88,11 @@ def run_info(run_id: str,
 def transform(item: dict):
   item['id'] = params2id(item.pop('params'), seperator='_')
   return item
+
+
+@router.delete('/{run_id}')
+def delete_run(run_id: str):
+  client.delete_run(run_id=run_id)
 
 
 @router.get('/{run_id}/moga/gens/')

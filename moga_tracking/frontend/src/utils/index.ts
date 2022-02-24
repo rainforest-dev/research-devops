@@ -22,3 +22,14 @@ export function download(
   a.download = fileName;
   a.click();
 }
+
+export const urlToFilename = (url: string) =>
+  url.substring(url.lastIndexOf("/") + 1);
+
+export const urlToFile = async (url: string) => {
+  const res = await fetch(url);
+  const filename = urlToFilename(url).replace("?format=", ".");
+  const type = res.headers.get("content-type") ?? undefined;
+  const blob = await res.blob();
+  return new File([blob], filename, { type });
+};
