@@ -1,4 +1,4 @@
-# research-devops
+research-devops
 
 ## Components
 

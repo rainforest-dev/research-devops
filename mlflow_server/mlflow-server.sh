@@ -1,8 +1,8 @@
-export $(cat $(eval echo "~rainforest")/Repositories/research-devops/mlflow_server/.env | xargs)
+export $(cat $1 | xargs)
 export MLFLOW_TRACKING_PORT=$PORT
 export MLFLOW_TRACKING_URI=http://$IP:$MLFLOW_TRACKING_PORT
 export MLFLOW_BACKEND_STORE_URI=postgresql://mlflow:mlflow@localhost/mlflow
-export MLFLOW_S3_ENDPOINT_URL=http://$IP:9000
+export MLFLOW_S3_ENDPOINT_URL=http://$IP:${S3_PORT:-9000}
 export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID
 export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
 export PATH=$(eval echo "~rainforest")/Repositories/research-devops/mlflow_server/.venv/bin/:$PATH

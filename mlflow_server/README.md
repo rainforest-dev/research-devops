@@ -96,7 +96,7 @@ mc ls minio
   ```
 - Create System Service
   ```
-  ln -s {{ PATH TO }}/mlflow-tracking.service /etc/systemd/system/
+  sudo ln -s {{ PATH TO }}/mlflow-tracking.service /etc/systemd/system/
   sudo systemctl daemon-reload
   sudo systemctl enable mlflow-tracking
   sudo systemctl start mlflow-tracking
