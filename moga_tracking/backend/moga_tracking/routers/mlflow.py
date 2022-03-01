@@ -117,6 +117,20 @@ def moga_gens(run_id: str,
     return results
 
 
+@router.get('/{run_id}/{artifact_path:path}')
+def moga_artifact(run_id: str, artifact_path: str):
+  artifact_path = artifact_path[1:]
+  local_path = download_artifacts(
+      run_id=run_id,
+      remote_path=artifact_path,
+      local_path=f"{os.getenv('TMP', 'tmp')}/{run_id}",
+      client=client)
+  return FileResponse(
+      path=local_path,
+      filename=artifact_path,
+  )
+
+
 @router.get('/{run_id}/moga/visualization/')
 @router.get('/{run_id}/moga/visualization/{palette}')
 def moga_visualize(run_id: str, palette: str = 'PuBu'):

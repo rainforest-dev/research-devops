@@ -50,7 +50,8 @@
 		"steoates.autoimport",
 		"christian-kohler.path-intellisense",
 		"mikestead.dotenv",
-		"ms-edgedevtools.vscode-edge-devtools"
+		"ms-edgedevtools.vscode-edge-devtools",
+		"MisterJ.vue-volar-extention-pack"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
