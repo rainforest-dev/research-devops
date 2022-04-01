@@ -22,4 +22,4 @@ volumes:
   vscode-extensions:
   research-data:
     external: true
-    name: research-data-main-a3d6636a90e96baeb533a53edccec31c
+    name: research-data
