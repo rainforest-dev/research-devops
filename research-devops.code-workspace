@@ -10,13 +10,17 @@
 		{
 			"path": "moga_tracking"
 		},
+		{
+			"path": "grpc"
+		},
 	],
 	"settings": {
 		"conventionalCommits.scopes": [
 			"research-devops",
 			"mlflow_model_serve",
 			"moga_tracking",
-			"devcontainer"
+			"devcontainer",
+			"grpc"
 		],
 		"cSpell.words": [
 			"Moga"
