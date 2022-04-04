@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import List
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile, Form, Request
@@ -9,9 +10,12 @@ from mlflow.pytorch import load_model
 import torch
 import torchvision.transforms.functional as F
 from torchinfo.torchinfo import summary
+import mlflow
 from research.utils.util import import_from_path
 from research.utils.mlflow import load_state_dict, classifier_builder
 from research.data_preprocessing.transforms import TorchScaler
+from hydra import compose, initialize, initialize_config_dir
+from hydra.utils import instantiate
 
 load_dotenv()
 
@@ -86,6 +90,48 @@ async def classify(run_id: str, file: UploadFile = File(...), threshold: float =
   y_hat = y_hat.flatten().tolist()
   return {'data': y_hat }
 
+
+@app.post('/classify/v2/{run_id}')
+async def classify_v2(run_id: str, file: UploadFile = File(...), threshold: float = 0.5):
+  img = np.load(file.file)
+
+  if run_id not in models:
+    # [reference](https://stackoverflow.com/questions/70991020/how-to-reload-hydra-config-with-enumerations)
+    from hydra.core.config_store import ConfigStore
+    from research.hydra.dataclass import Config, ModelConfig
+    cs = ConfigStore.instance()
+    cs.store(name="base_config", node=Config)
+    cs.store(group="model", name="base_classifier", node=ModelConfig)
+    cs = ConfigStore.instance()
+    cs.store(
+        name="reload_config",
+        node={
+            "defaults": [
+                "base_config",
+                "config",
+            ]
+        },
+    )
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    dst_path = Path('models', run_id, 'state_dict/')
+    os.makedirs(dst_path, exist_ok=True)
+    local_path = client.download_artifacts(run_id, 'state_dict', dst_path)
+    state_dict = mlflow.pytorch.load_state_dict(local_path, map_location=device)
+    config_path = client.download_artifacts(run_id, 'output/.hydra', dst_path)
+    initialize_config_dir(config_dir=config_path)
+    config = compose("reload_config")
+    model = instantiate(config.model, _recursive_=False)
+    model.load_state_dict(dict(state_dict['model']), strict=False)
+    model.eval()
+    print(config_path, model)
+    models[run_id] = model
+
+  img = torch.unsqueeze(F.to_tensor(img), 0)
+  y_hat = models[run_id](img)
+  y_hat = y_hat.detach().numpy()
+  y_hat = np.where(y_hat >= threshold, True, False)
+  y_hat = y_hat.flatten().tolist()
+  return {'data': y_hat }
 
 def scaler_builder(state_dict: dict, args: dict, local_path: str, config_path: str):
   scaler = args.get('scaler')()
