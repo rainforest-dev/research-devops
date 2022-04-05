@@ -97,6 +97,7 @@ async def classify_v2(run_id: str, file: UploadFile = File(...), threshold: floa
 
   if run_id not in models:
     # [reference](https://stackoverflow.com/questions/70991020/how-to-reload-hydra-config-with-enumerations)
+    from hydra.core.global_hydra import GlobalHydra
     from hydra.core.config_store import ConfigStore
     from research.hydra.dataclass import Config, ModelConfig
     cs = ConfigStore.instance()
@@ -118,6 +119,7 @@ async def classify_v2(run_id: str, file: UploadFile = File(...), threshold: floa
     local_path = client.download_artifacts(run_id, 'state_dict', dst_path)
     state_dict = mlflow.pytorch.load_state_dict(local_path, map_location=device)
     config_path = client.download_artifacts(run_id, 'output/.hydra', dst_path)
+    GlobalHydra.instance().clear()
     initialize_config_dir(config_dir=config_path)
     config = compose("reload_config")
     model = instantiate(config.model, _recursive_=False)
