@@ -20,8 +20,6 @@ const { themes } = defineProps({
   }
 })
 
-console.log(themes)
-
 const theme = useLocalStorage('theme', themes[0])
 
 watch(theme, () => {

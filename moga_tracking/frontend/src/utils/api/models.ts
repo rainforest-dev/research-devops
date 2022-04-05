@@ -12,46 +12,73 @@ const _url = (url: string) =>
   }${url}`;
 export const model_url = _url;
 
-export const strength = async (file: File, inverse = true) => {
+export const strength = async (
+  file: File,
+  run_id = VITE_STRENGTH_RUN_ID,
+  inverse = true
+) => {
   try {
     const data = new FormData();
     data.append("file", file);
-    const res = await fetch(
-      _url(`/predict/${VITE_STRENGTH_RUN_ID}?inverse=${inverse}`),
-      {
-        method: "POST",
-        body: data,
-      }
-    );
+    const res = await fetch(_url(`/predict/${run_id}?inverse=${inverse}`), {
+      method: "POST",
+      body: data,
+    });
     return (await res.json())["data"] as number[];
   } catch (error) {
     console.warn(error);
   }
 };
 
-export const toughness = async (file: File, inverse = true) => {
+export const toughness = async (
+  file: File,
+  run_id = VITE_TOUGHNESS_RUN_ID,
+  inverse = true
+) => {
   try {
     const data = new FormData();
     data.append("file", file);
-    const res = await fetch(
-      _url(`/predict/${VITE_TOUGHNESS_RUN_ID}?inverse=${inverse}`),
-      {
-        method: "POST",
-        body: data,
-      }
-    );
+    const res = await fetch(_url(`/predict/${run_id}?inverse=${inverse}`), {
+      method: "POST",
+      body: data,
+    });
     return (await res.json())["data"] as number[];
   } catch (error) {
     console.warn(error);
   }
 };
 
-export const classify = async (file: File, threshold = 0.5) => {
+export const classify = async (
+  file: File,
+  run_id = VITE_CLASSIFICATION_RUN_ID,
+  threshold = 0.5
+) => {
   try {
     const data = new FormData();
     data.append("file", file);
     const res = await fetch(
-      _url(`/classify/${VITE_CLASSIFICATION_RUN_ID}?threshold=${threshold}`),
+      _url(`/classify/${run_id}?threshold=${threshold}`),
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+    return (await res.json())["data"] as boolean[];
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+export const classifyV2 = async (
+  file: File,
+  run_id = VITE_CLASSIFICATION_RUN_ID,
+  threshold = 0.5
+) => {
+  try {
+    const data = new FormData();
+    data.append("file", file);
+    const res = await fetch(
+      _url(`/classify/v2/${run_id}?threshold=${threshold}`),
       {
         method: "POST",
         body: data,

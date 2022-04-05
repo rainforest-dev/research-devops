@@ -1,6 +1,17 @@
 import { Expose, Transform } from "class-transformer";
 import { url } from "@/utils/api";
 
+export interface ApiEndpoint {
+  url: string;
+  version?: number;
+}
+
+export interface ApiEndpoints {
+  strength: ApiEndpoint;
+  toughness: ApiEndpoint;
+  classification: ApiEndpoint;
+}
+
 export enum RunStatus {
   Finished = "FINISHED",
 }
