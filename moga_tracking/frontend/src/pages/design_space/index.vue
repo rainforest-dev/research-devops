@@ -4,7 +4,7 @@
     .grid.grid-cols-3.cursor-pointer(:class="[!item.disabled && 'border-8 border-primary']")
       .aspect-square.border.border-neutral(v-for="cell, index in item.parameters" :key="`${item.id}-${index}`" :class="[cell === 0 ? 'bg-black' : 'bg-white']")
     .dropdown-content.bg-base-100.p-4.w-96.shadow-xl.border.card.delay-500
-      span {{item.id}}
+      span {{ item.id }}
       img.aspect-square.border(:src="item.src")
 .fixed.right-0.bottom-0.card
   .card-body
@@ -41,7 +41,7 @@ class Item {
   @Expose()
   get src() {
     const paramsPart = this.parameters.join("_");
-    return `http://localhost:3000/nacre/${paramsPart}_32_64_32_32_64_32`;
+    return url(`/nacre/${paramsPart}_32_64_32_32_64_32`);
   }
 }
 

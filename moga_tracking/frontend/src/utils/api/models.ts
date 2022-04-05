@@ -5,7 +5,12 @@ const {
   VITE_CLASSIFICATION_RUN_ID,
 } = import.meta.env;
 
-const _url = (url: string) => `${VITE_MODEL_API_ENDPOINT ?? ""}${url}`;
+const _url = (url: string) =>
+  `${
+    `${window.location.protocol}//${window.location.hostname}${VITE_MODEL_API_ENDPOINT}` ??
+    ""
+  }${url}`;
+export const model_url = _url;
 
 export const strength = async (file: File, inverse = true) => {
   try {

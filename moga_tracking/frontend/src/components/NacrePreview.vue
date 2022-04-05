@@ -50,6 +50,7 @@ import { useElementSize } from "@vueuse/core";
 import Slider from "@vueform/slider";
 import * as form from "@/types/form";
 import * as nacre from "@/types/nacre";
+import { url as _url } from "@/utils/api";
 
 const a = typeof defineComponent;
 
@@ -156,7 +157,7 @@ const url = computed(() => {
     ...L.value,
   ];
   const paramsPart = _params.join("_");
-  return `http://localhost:3000/nacre/${paramsPart}`;
+  return _url(`/nacre/${paramsPart}`);
 });
 
 const clear = () => {
