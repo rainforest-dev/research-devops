@@ -100,7 +100,7 @@ watch(
 const loading = ref(false);
 const vf = useStorage("vf", [0, 1]);
 const dataset = ref<NacreDB[]>([]);
-const experimentName = ref<string>("moga(test)");
+const experimentName = useLocalStorage<string>("experiment", "moga(test)");
 const runs = ref<Run[]>([]);
 const favorites = useLocalStorage<string[]>("favorites", []);
 const favorite = (runId: string) => {
