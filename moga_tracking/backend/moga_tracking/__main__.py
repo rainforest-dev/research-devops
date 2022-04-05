@@ -29,17 +29,6 @@ app.include_router(mlflow.router)
 app.include_router(nacre.router)
 
 
-@app.get("/")
-async def index():
-  return FileResponse(f'{os.getenv("FRONTEND_STATIC_FILES")}index.html',
-                      media_type='text/html')
-
-
-app.mount("/static",
-          StaticFiles(directory=os.getenv("FRONTEND_STATIC_FILES")),
-          name="home")
-
-
 @app.get('/about')
 def about():
   return 'tracking and visualizing results of Multi-objective Genetic Algorithm on Mlflow'
