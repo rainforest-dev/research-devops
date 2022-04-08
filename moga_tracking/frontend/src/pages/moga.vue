@@ -85,8 +85,16 @@ import { mogaKey } from "@/providers";
 const dateFormat = "yyyy-MM-dd HH:mm";
 Chart.register(...registerables);
 
-// https://www.npmjs.com/package/chroma.ts
-const baseColor = ref<string>("OrRd");
+interface IState {
+  baseColor: string;
+  fontSize: number;
+}
+
+const state = useLocalStorage<IState>("moga-state", {
+  // https://www.npmjs.com/package/chroma.ts
+  baseColor: "OrRd",
+  fontSize: 14,
+});
 
 const router = useRouter();
 const route = useRoute();
@@ -129,7 +137,7 @@ const favorite = (runId: string) => {
 const gens = reactive<{ [key: number]: providers.ChartDataset }>({});
 const gensLength = computed(() => Object.keys(gens).length);
 const colorscheme = computed(() =>
-  chroma.scale(baseColor.value).colors(gensLength.value)
+  chroma.scale(state.value.baseColor).colors(gensLength.value)
 );
 const addGen = (key: number, data: providers.ChartDataset) => {
   gens[key] = data;
@@ -205,7 +213,7 @@ const options = reactive({
         display: true,
         text: "strength",
         font: {
-          size: 14,
+          size: state.value.fontSize,
         },
       },
     },
@@ -214,7 +222,7 @@ const options = reactive({
         display: true,
         text: "toughness",
         font: {
-          size: 14,
+          size: state.value.fontSize,
         },
       },
     },
