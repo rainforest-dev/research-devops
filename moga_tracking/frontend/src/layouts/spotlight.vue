@@ -26,7 +26,7 @@ import { useLocalStorage } from "@vueuse/core";
 import { urlToFile } from "@/utils";
 import { url } from "@/utils/api";
 import { classify, toughness, strength, classifyV2 } from "@/utils/api/models";
-import { ApiEndpoints } from "@/types/api";
+import * as api from "@/types/api";
 
 const {
   VITE_STRENGTH_RUN_ID,
@@ -34,13 +34,13 @@ const {
   VITE_CLASSIFICATION_RUN_ID,
 } = import.meta.env;
 
-const apiEndpoints = useLocalStorage<ApiEndpoints>(
+const apiEndpoints = useLocalStorage<api.ApiEndpoints>(
   "api-endpoints",
   {
     strength: { url: VITE_STRENGTH_RUN_ID, version: 1 },
     toughness: { url: VITE_TOUGHNESS_RUN_ID, version: 1 },
     classification: { url: VITE_CLASSIFICATION_RUN_ID, version: 2 },
-  } as ApiEndpoints,
+  } as api.ApiEndpoints,
   undefined
 );
 

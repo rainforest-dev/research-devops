@@ -49,6 +49,9 @@
               .stat
                 .stat-title Toughness
                 .stat-value {{ item.toughness }}
+              .stat
+                .stat-title Toughness Index
+                .stat-value {{ item.toughnessIndex }}
             .card-actions
               a.btn(:href="item.raw512" target="_blank" download) .npy
     .flex.overflow-x-auto.w-full.space-x-2
@@ -99,7 +102,22 @@ watch(
 
 const loading = ref(false);
 const vf = useStorage("vf", [0, 1]);
+const brittleThreshold = useLocalStorage<number>("brittleThreshold", 0);
 const dataset = ref<NacreDB[]>([]);
+const datasetBrittle = computed(() =>
+  dataset.value.filter((e) =>
+    e.toughnessIndex !== undefined
+      ? e.toughnessIndex <= brittleThreshold.value
+      : false
+  )
+);
+const datasetNonBrittle = computed(() =>
+  dataset.value.filter((e) =>
+    e.toughnessIndex !== undefined
+      ? e.toughnessIndex > brittleThreshold.value
+      : true
+  )
+);
 const experimentName = useLocalStorage<string>("experiment", "moga(test)");
 const runs = ref<Run[]>([]);
 const favorites = useLocalStorage<string[]>("favorites", []);
@@ -135,7 +153,14 @@ watchEffect(async () => {
   dataset.value =
     (await getDBTable(
       "nacre",
-      ["id", "ultraStress", "total_area", "preview_512", "raw_512"],
+      [
+        "id",
+        "ultraStress",
+        "total_area",
+        "toughness_index",
+        "preview_512",
+        "raw_512",
+      ],
       undefined,
       vf.value
     )) ?? [];
@@ -149,10 +174,19 @@ const data = computed(() => ({
     {
       label: "Dataset",
       order: gensLength.value,
-      data: (dataset.value ?? [])
+      data: (datasetNonBrittle.value ?? [])
         .filter((e) => e.strength && e.toughness)
         .map((e) => ({ x: e.strength!, y: e.toughness! })),
       pointRadius: 6,
+    },
+    {
+      label: "Dataset (Brittle)",
+      order: gensLength.value + 1,
+      data: (datasetBrittle.value ?? [])
+        .filter((e) => e.strength && e.toughness)
+        .map((e) => ({ x: e.strength!, y: e.toughness! })),
+      pointRadius: 6,
+      pointStyle: "cross",
     },
     ...Object.values(gens).map((e, idx) => ({
       ...e,
@@ -222,10 +256,19 @@ const options = reactive({
   },
 });
 watchEffect(() => {
-  if (dataset && selectedPoints.value.length > 0)
-    datasetSelectedData.value = selectedPoints.value
-      .filter((e) => e.datasetIndex === 0)
-      .map((e) => dataset.value[e.index as number]);
+  if (
+    datasetNonBrittle.value &&
+    datasetBrittle.value &&
+    selectedPoints.value.length > 0
+  )
+    datasetSelectedData.value = [
+      ...selectedPoints.value
+        .filter((e) => e.datasetIndex === 0)
+        .map((e) => datasetNonBrittle.value[e.index as number]),
+      ...selectedPoints.value
+        .filter((e) => e.datasetIndex === 1)
+        .map((e) => datasetBrittle.value[e.index as number]),
+    ];
 });
 const exportChart = () => {
   const dataImage = scatterRef.value.chartInstance.toBase64Image();

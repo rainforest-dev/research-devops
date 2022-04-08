@@ -53,13 +53,13 @@ const { vf, selectedPoints, addGen, removeGens } = inject(mogaKey) ?? {};
 const selectedData = computed(() => {
   const grouped = groupBy(
     selectedPoints?.value,
-    (e) => Object.keys(gens.value)[e.datasetIndex]
+    (e) => Object.keys(gens.value)[e.datasetIndex - 1]
   );
   return mapValues(grouped, (points) =>
     points.map(
       (point) =>
         gens.value[
-          Object.keys(gens.value)[point.datasetIndex] as unknown as number
+          Object.keys(gens.value)[point.datasetIndex - 1] as unknown as number
         ][point.index]
     )
   );
