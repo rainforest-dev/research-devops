@@ -180,7 +180,7 @@ const datasetSelectedData = ref<NacreDB[]>();
 const data = computed(() => ({
   datasets: [
     {
-      label: "Dataset",
+      label: "o Dataset",
       order: gensLength.value,
       data: (datasetNonBrittle.value ?? [])
         .filter((e) => e.strength && e.toughness)
@@ -188,7 +188,7 @@ const data = computed(() => ({
       pointRadius: 6,
     },
     {
-      label: "Dataset (Brittle)",
+      label: "+ Dataset (Brittle)",
       order: gensLength.value + 1,
       data: (datasetBrittle.value ?? [])
         .filter((e) => e.strength && e.toughness)
