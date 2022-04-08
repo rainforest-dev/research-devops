@@ -1,6 +1,6 @@
 <template lang="pug">
 .flex.flex-col-reverse
-  .flex.flex-col(v-for="([gen, items]) in Object.entries(selectedData)" :key="gen")
+  .flex.flex-col(v-for="([gen, items]) in Object.entries(selectedPoints?.length ? selectedData : gens)" :key="gen")
     .collapse.collapse-arrow(:tabindex="gen")
       input(type="checkbox")
       .collapse-title {{ gen }}
