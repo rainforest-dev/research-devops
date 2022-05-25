@@ -32,7 +32,7 @@
     button.btn.btn-outline.btn-error(@click="() => runId && deleteRun(runId)")
       TrashIcon.h-5.w-5
   ScatterChart(ref="scatterRef" :chart-data="data" :options="options")
-  .flex-grow.overflow-auto(v-show="selectedPoints.length > 0")
+  .flex-grow.overflow-auto
     .collapse.collapse-arrow(tabindex="0")
       input(type="checkbox")
       .collapse-title Dataset
