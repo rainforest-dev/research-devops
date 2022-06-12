@@ -163,7 +163,7 @@ watchEffect(async () => {
       "nacre",
       [
         "id",
-        "ultraStress",
+        "ultra_stress",
         "total_area",
         "toughness_index",
         "preview_512",

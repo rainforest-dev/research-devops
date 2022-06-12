@@ -1,5 +1,5 @@
-import { Expose, Transform } from "class-transformer";
-import { url } from "@/utils/api";
+import { Expose, Transform } from 'class-transformer';
+import { url } from '@/utils/api';
 
 export interface ApiEndpoint {
   url: string;
@@ -13,22 +13,22 @@ export interface ApiEndpoints {
 }
 
 export enum RunStatus {
-  Finished = "FINISHED",
+  Finished = 'FINISHED',
 }
 
 export class Run {
   id!: string;
   status!: RunStatus;
-  @Expose({ name: "start_time" })
+  @Expose({ name: 'start_time' })
   @Transform(({ value }) => new Date(value))
   startAt!: Date;
   @Transform(({ value }) => new Date(value))
-  @Expose({ name: "end_time" })
+  @Expose({ name: 'end_time' })
   endAt!: Date;
 }
 
 export enum RunInfoType {
-  Params = "params",
+  Params = 'params',
 }
 
 export interface Nacre {
@@ -40,28 +40,28 @@ export interface Nacre {
 export class NacreDB {
   @Expose()
   id?: string;
-  @Expose({ name: "ultraStress" })
+  @Expose({ name: 'ultra_stress' })
   strength?: number;
-  @Expose({ name: "total_area" })
+  @Expose({ name: 'total_area' })
   toughness?: number;
-  @Expose({ name: "toughness_index" })
+  @Expose({ name: 'toughness_index' })
   toughnessIndex?: number;
-  @Expose({ name: "preview_unit_cell" })
+  @Expose({ name: 'preview_unit_cell' })
   @Transform(({ value }) => url(`/${value}`))
   previewUnitCell?: string;
-  @Expose({ name: "raw_unit_cell" })
+  @Expose({ name: 'raw_unit_cell' })
   @Transform(({ value }) => url(`/${value}`))
   rawUnitCell?: string;
-  @Expose({ name: "preview_128" })
+  @Expose({ name: 'preview_128' })
   @Transform(({ value }) => url(`/${value}`))
   preview128?: string;
-  @Expose({ name: "raw_128" })
+  @Expose({ name: 'raw_128' })
   @Transform(({ value }) => url(`/${value}`))
   raw128?: string;
-  @Expose({ name: "preview_512" })
+  @Expose({ name: 'preview_512' })
   @Transform(({ value }) => url(`/${value}`))
   preview512?: string;
-  @Expose({ name: "raw_512" })
+  @Expose({ name: 'raw_512' })
   @Transform(({ value }) => url(`/${value}`))
   raw512?: string;
 
