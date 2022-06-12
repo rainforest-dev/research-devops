@@ -127,6 +127,7 @@ const datasetNonBrittle = computed(() =>
   )
 );
 const experimentName = useLocalStorage<string>("experiment", "moga(test)");
+const dbTableName = useLocalStorage<string>("dbTableName", "nacre");
 const runs = ref<Run[]>([]);
 const favorites = useLocalStorage<string[]>("favorites", []);
 const favorite = (runId: string) => {
@@ -160,7 +161,7 @@ watchEffect(async () => {
   loading.value = true;
   dataset.value =
     (await getDBTable(
-      "nacre",
+      dbTableName.value,
       [
         "id",
         "ultra_stress",
